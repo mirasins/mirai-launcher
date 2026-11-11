@@ -130,6 +130,9 @@ fn suite_folders(app: &CraftApp, roots: &[PathBuf]) -> Vec<PathBuf> {
 fn install_dir_keys(app: &CraftApp) -> Vec<String> {
     let mut keys = vec![format!(r"SOFTWARE\{}", app.name)];
     if app.id == artcraft_launcher_core::catalog::LAUNCHER_ID {
+        // The Mirai fork's MSI records under its own name; copies installed before the rename
+        // still have upstream's key.
+        keys.push(format!(r"SOFTWARE\{PUBLISHER}\{}", artcraft_launcher_core::brand::APP_NAME));
         keys.push(format!(r"SOFTWARE\{PUBLISHER}\{}", app.name));
     }
     keys
@@ -1170,7 +1173,11 @@ mod tests {
     fn the_launcher_records_its_folder_under_the_publisher_key() {
         assert_eq!(
             install_dir_keys(&artcraft_launcher_core::catalog::LAUNCHER),
-            [r"SOFTWARE\ArtCraft Launcher".to_string(), format!(r"SOFTWARE\{LEARNING_MACHINES}\ArtCraft Launcher")]
+            [
+                r"SOFTWARE\ArtCraft Launcher".to_string(),
+                format!(r"SOFTWARE\{LEARNING_MACHINES}\Mirai Launcher"),
+                format!(r"SOFTWARE\{LEARNING_MACHINES}\ArtCraft Launcher"),
+            ]
         );
         let photo = CraftApp::by_id("photocraft").unwrap();
         assert_eq!(install_dir_keys(photo), [r"SOFTWARE\PhotoCraft".to_string()]);

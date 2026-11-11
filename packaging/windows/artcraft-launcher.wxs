@@ -66,8 +66,11 @@
     <!-- An update installs where the user put the previous version (recorded by
          ArtCraftLauncherApp below; every version since 0.1.0 records it). -->
     <Property Id="INSTALLFOLDER" Secure="yes" />
+    <!-- The Mirai fork records under its own name. Upstream's key is searched first (AppSearch keeps
+         the last value found), so a copy installed before the rename keeps its folder. -->
     <Property Id="PREVIOUSINSTALLFOLDER" Secure="yes">
-      <RegistrySearch Id="PreviousInstallFolder" Root="HKCU" Key="Software\Learning Machines LLC\ArtCraft Launcher" Name="InstallDir" Type="raw" />
+      <RegistrySearch Id="UpstreamInstallFolder" Root="HKCU" Key="Software\Learning Machines LLC\ArtCraft Launcher" Name="InstallDir" Type="raw" />
+      <RegistrySearch Id="PreviousInstallFolder" Root="HKCU" Key="Software\Learning Machines LLC\Mirai Launcher" Name="InstallDir" Type="raw" />
     </Property>
     <SetProperty Id="INSTALLFOLDER" Action="CraftRestoreLauncherFolder" Value="[PREVIOUSINSTALLFOLDER]"
         Before="CostInitialize" Sequence="both" Condition="PREVIOUSINSTALLFOLDER AND NOT INSTALLFOLDER" />
@@ -77,7 +80,8 @@
          from a version that never asked (0.1.0, 0.1.1) adds none. A value given on the command
          line (msiexec ... INSTALLDESKTOPSHORTCUT=0 or 1) wins. -->
     <Property Id="PREVIOUSDESKTOPSHORTCUT">
-      <RegistrySearch Id="PreviousDesktopShortcut" Root="HKCU" Key="Software\Learning Machines LLC\ArtCraft Launcher" Name="DesktopShortcutChoice" Type="raw" />
+      <RegistrySearch Id="UpstreamDesktopShortcut" Root="HKCU" Key="Software\Learning Machines LLC\ArtCraft Launcher" Name="DesktopShortcutChoice" Type="raw" />
+      <RegistrySearch Id="PreviousDesktopShortcut" Root="HKCU" Key="Software\Learning Machines LLC\Mirai Launcher" Name="DesktopShortcutChoice" Type="raw" />
     </Property>
     <SetProperty Id="INSTALLDESKTOPSHORTCUT" Value="1" After="AppSearch" Sequence="first"
         Condition="NOT INSTALLDESKTOPSHORTCUT AND ((NOT Installed AND NOT WIX_UPGRADE_DETECTED AND NOT PREVIOUSDESKTOPSHORTCUT) OR PREVIOUSDESKTOPSHORTCUT = &quot;1&quot;)" />
@@ -156,8 +160,8 @@
         <File Id="ArtCraftLauncherNotice" Source="$(var.BinDir)\NOTICE" KeyPath="no" />
         <File Id="ArtCraftLauncherExe" Source="$(var.BinDir)\artcraft-launcher.exe" KeyPath="no" />
         <!-- Read back by the next version's installer and by the launcher (self_update.rs). -->
-        <RegistryValue Root="HKCU" Key="Software\Learning Machines LLC\ArtCraft Launcher" Name="InstallDir" Value="[INSTALLFOLDER]" Type="string" KeyPath="yes" />
-        <RegistryValue Root="HKCU" Key="Software\Learning Machines LLC\ArtCraft Launcher" Name="DesktopShortcutChoice" Value="[DESKTOPSHORTCUTCHOICE]" Type="string" />
+        <RegistryValue Root="HKCU" Key="Software\Learning Machines LLC\Mirai Launcher" Name="InstallDir" Value="[INSTALLFOLDER]" Type="string" KeyPath="yes" />
+        <RegistryValue Root="HKCU" Key="Software\Learning Machines LLC\Mirai Launcher" Name="DesktopShortcutChoice" Value="[DESKTOPSHORTCUTCHOICE]" Type="string" />
         <!-- Win+R "artcraft-launcher". -->
         <RegistryValue Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\App Paths\artcraft-launcher.exe" Value="[#ArtCraftLauncherExe]" Type="string" />
         <RemoveFolder Id="RemoveInstallFolder" Directory="INSTALLFOLDER" On="uninstall" />
@@ -171,7 +175,7 @@
             Target="[#ArtCraftLauncherExe]" WorkingDirectory="INSTALLFOLDER">
           <ShortcutProperty Key="System.AppUserModel.ID" Value="ai.storyteller.artcraft-launcher" />
         </Shortcut>
-        <RegistryValue Root="HKCU" Key="Software\Learning Machines LLC\ArtCraft Launcher" Name="StartMenuShortcut" Value="1" Type="integer" KeyPath="yes" />
+        <RegistryValue Root="HKCU" Key="Software\Learning Machines LLC\Mirai Launcher" Name="StartMenuShortcut" Value="1" Type="integer" KeyPath="yes" />
       </Component>
 
       <!-- Only when the folder page's box is ticked; removed on uninstall like everything else. -->
@@ -182,7 +186,7 @@
             Target="[#ArtCraftLauncherExe]" WorkingDirectory="INSTALLFOLDER">
           <ShortcutProperty Key="System.AppUserModel.ID" Value="ai.storyteller.artcraft-launcher" />
         </Shortcut>
-        <RegistryValue Root="HKCU" Key="Software\Learning Machines LLC\ArtCraft Launcher" Name="DesktopShortcut" Value="1" Type="integer" KeyPath="yes" />
+        <RegistryValue Root="HKCU" Key="Software\Learning Machines LLC\Mirai Launcher" Name="DesktopShortcut" Value="1" Type="integer" KeyPath="yes" />
       </Component>
     </ComponentGroup>
   </Fragment>

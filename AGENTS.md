@@ -210,8 +210,9 @@ Packaging facts the code relies on:
   (Welcome; a folder page with a "Create a desktop shortcut" box; Ready; progress; Finish with
   "Launch"), whose art `package.ps1` draws at build time; self-update runs it with `/passive`, no
   wizard. The folder and the shortcut choice are recorded under
-  `HKCU\Software\Learning Machines LLC\ArtCraft Launcher` (`InstallDir`,
-  `DesktopShortcutChoice`) and reused by the next version, and `self_update.rs` reads `InstallDir`
+  `HKCU\Software\Learning Machines LLC\Mirai Launcher` (`InstallDir`,
+  `DesktopShortcutChoice`; the Mirai fork also reads upstream's `...\ArtCraft Launcher` key, for
+  copies installed before the rename) and reused by the next version, and `self_update.rs` reads `InstallDir`
   to know the running copy came from the MSI. Its shortcuts set AppUserModelID
   `ai.storyteller.artcraft-launcher`, which toast notifications need. `portable.txt` beside the exe switches on portable mode
   (`ArtCraftLauncherData\` next to the exe).
