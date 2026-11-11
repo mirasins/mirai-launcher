@@ -163,11 +163,12 @@ borrows the system's Georgian font the same way.
 1. **Assets need attribution.** Every bundled asset gets a row in `ATTRIBUTION.md` (path, title,
    author, source, license) in the same change. The ArtCraft name, logo and "A" mark are
    trademarks, **not MIT/Apache** (`docs/brand/LICENSE-brand.txt`), and this fork does not ship
-   them: the header, app icon and tray show the Mirai mark instead (`assets/app-icon`).
-2. **Icons are generated.** The app icon and the tray icon are rendered from the Mirai mark,
-   `assets/app-icon/artcraft-launcher.svg`; never edit the renders by hand. Run `packaging/icons.sh` (needs `resvg`; runs on any OS) and commit the outputs.
+   them: the header, app icon and tray show the Mirai Launcher icon instead (`assets/app-icon`).
+2. **Icons are generated.** The app icon and the tray icon are rendered from the Mirai Launcher
+   icon's masters in `assets/app-icon/` by `packaging/icons.sh`; never edit the renders by hand. Run `packaging/icons.sh` (needs Python 3 with Pillow; runs on any OS) and commit the outputs.
    `assets/app-icons/` is copied verbatim from each app's repo (`assets/app-icon/hicolor/128x128/apps/ai.storyteller.<app>.png`);
-   refresh it from there, never redraw.
+   refresh it from there, never redraw. The four Mirai apps' icons come from the fork owner's Mirai
+   icon set, scaled to 128 px.
 3. **Never break wasm.** `cargo xtask wasm` must pass. File-system, process and OS code is
    `cfg(not(target_arch = "wasm32"))`.
 4. **Tests are the gate.** Release parsing and asset picking in `core` get unit tests with real

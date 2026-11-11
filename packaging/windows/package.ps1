@@ -104,7 +104,7 @@ Copy-Item (Join-Path $Bin $Exe) $Stage
 #     "Launcher" label and the Craft apps' icons in a hairline grid.
 #   - banner, 493x58: across the top of the inner pages. The page title is drawn over its left
 #     side, so that stays white; the right end is a dark cell with the mark.
-# The Mirai mark and wordmark are the fork's own (assets/app-icon/README.md).
+# The Mirai icon and wordmark are the fork's own (assets/app-icon/README.md).
 function New-InstallerArt([string] $BannerOut, [string] $DialogOut) {
   Add-Type -AssemblyName System.Drawing
   $ink = [System.Drawing.ColorTranslator]::FromHtml('#121316')

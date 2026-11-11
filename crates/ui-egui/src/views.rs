@@ -175,7 +175,7 @@ impl LauncherUi {
             if bar == TitleBar::MacOs {
                 ui.add_space(TRAFFIC_LIGHTS_W);
             }
-            // The Mirai mark and name, in their own cell.
+            // The Mirai Launcher icon and name, in their own cell.
             let mark = 18.0;
             let name = ui.painter().layout_no_wrap("Mirai".to_string(), egui::FontId::new(16.0, crate::theme::display()), t.ink_strong);
             let width = mark + 8.0 + name.size().x;

@@ -6,7 +6,8 @@ Licensed under the MIT License or the Apache License, Version 2.0, at your optio
 Mirai Launcher is the Mirai fork of ArtCraft Launcher. The ArtCraft name, wordmark, logo and "A"
 mark are trademarks of the ArtCraft Team, NOT open source and NOT covered by the license above
 (docs/brand/LICENSE-brand.txt); forks must remove them. This fork's app icon, header mark and tray
-icon are its own Mirai mark (assets/app-icon/, MIT OR Apache-2.0).
+icon are its own Mirai Launcher icon (assets/app-icon/, MIT OR Apache-2.0), and the four Mirai
+apps' icons in assets/app-icons/ are the fork's own as well.
 
 Third-party material
 

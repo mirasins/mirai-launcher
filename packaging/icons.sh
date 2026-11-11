@@ -1,68 +1,63 @@
 #!/usr/bin/env bash
-# Regenerate every app and tray icon from the Mirai mark, assets/app-icon/artcraft-launcher.svg
-# (original to the Mirai fork, MIT OR Apache-2.0; see assets/app-icon/README.md).
+# Regenerate every app and tray icon from the Mirai Launcher icon's raster master,
+# assets/app-icon/artcraft-launcher-1024.png (supplied by the fork's owner, MIT OR Apache-2.0;
+# see assets/app-icon/README.md). The SVG master is copied as the hicolor scalable icon.
 #
-# - App icon (Dock, taskbar, Start menu, Linux menus, installers): the mark in colour.
-# - Tray: a black copy as the macOS menu-bar template; the mark in colour on Windows, Linux and BSD.
-#
-# Needs: resvg (brew install resvg / cargo install resvg). The .ico and .icns are packed by
-# `cargo xtask ico` / `cargo xtask icns`, so this runs on any OS. The outputs are committed, so
-# packaging (and the Rust build, which include_bytes!s some of them) never needs these tools.
+# Needs: Python 3 with Pillow. The .ico and .icns are packed by `cargo xtask ico` /
+# `cargo xtask icns`, so this runs on any OS. The outputs are committed, so packaging (and the
+# Rust build, which include_bytes!s some of them) never needs these tools.
 #
 #   packaging/icons.sh
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 DIR="$ROOT/assets/app-icon"
-SRC="$TMP/mark.svg"
 ID="ai.storyteller.artcraft-launcher"
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
-cp "$DIR/artcraft-launcher.svg" "$TMP/mark.svg"
 
-command -v resvg >/dev/null || { echo "error: resvg not found (brew install resvg)" >&2; exit 1; }
+python3 - "$DIR" "$ID" "$TMP" <<'PY'
+import os, sys
+from PIL import Image
 
-# macOS icons get a little more transparent margin (Apple's 824/1024 icon grid) by widening the
-# view box; everything else uses the file as is.
-BOX='viewBox="0 0 128 128"'
-grep -q "$BOX" "$SRC" || { echo "error: expected $BOX in $SRC" >&2; exit 1; }
-MAC="$TMP/mac.svg"
-sed "s/$BOX/viewBox=\"-12.8 -12.8 153.6 153.6\"/" "$SRC" >"$MAC"
-FLAT="$SRC"
+d, app_id, tmp = sys.argv[1:4]
+master = Image.open(os.path.join(d, "artcraft-launcher-1024.png")).convert("RGBA")
 
-render() {
-  local src="$1" size="$2" out="$3"
-  resvg -w "$size" -h "$size" "$src" "$out" </dev/null
-}
+def down(size, out):
+    master.resize((size, size), Image.LANCZOS).save(out)
 
-render "$MAC" 1024 "$DIR/artcraft-launcher-1024.png"
+for s in (16, 24, 32, 48, 64, 128, 256, 512):
+    os.makedirs(os.path.join(d, "hicolor", f"{s}x{s}", "apps"), exist_ok=True)
+    down(s, os.path.join(d, "hicolor", f"{s}x{s}", "apps", app_id + ".png"))
+for s in (16, 20, 24, 32, 40, 48, 64, 128, 256):
+    down(s, os.path.join(tmp, f"ico-{s}.png"))
+for s in (16, 32, 64, 128, 256, 512, 1024):
+    down(s, os.path.join(tmp, f"icns-{s}.png"))
+down(64, os.path.join(d, "tray-64.png"))
 
-# Linux hicolor theme.
-for s in 16 24 32 48 64 128 256 512; do
-  mkdir -p "$DIR/hicolor/${s}x${s}/apps"
-  render "$FLAT" "$s" "$DIR/hicolor/${s}x${s}/apps/$ID.png"
-done
+# The macOS menu-bar template (44 px = 22 pt @2x; macOS tints it): the orb as a black disc with
+# its white "Mirai" lettering (the band 0.45..0.65 of the height) knocked out.
+n = master.size[0]
+px = master.load()
+mask = Image.new("L", master.size, 0)
+m = mask.load()
+for y in range(n):
+    for x in range(n):
+        r, g, b, a = px[x, y]
+        text = r > 240 and g > 240 and b > 240 and a > 200 and 0.45 * n < y < 0.65 * n
+        m[x, y] = 0 if text else a
+rad = n * 211 / 512  # the orb's radius in the SVG master
+c = n / 2
+mask = mask.crop(tuple(int(round(v)) for v in (c - rad, c - rad, c + rad, c + rad)))
+disc = Image.new("RGBA", mask.size, (0, 0, 0, 255))
+disc.putalpha(mask)
+tray = Image.new("RGBA", (44, 44), (0, 0, 0, 0))
+tray.alpha_composite(disc.resize((42, 42), Image.LANCZOS), (1, 1))
+tray.save(os.path.join(d, "tray-black-44.png"))
+PY
+
 mkdir -p "$DIR/hicolor/scalable/apps"
-cp "$SRC" "$DIR/hicolor/scalable/apps/$ID.svg"
+cp "$DIR/artcraft-launcher.svg" "$DIR/hicolor/scalable/apps/$ID.svg"
 
-# Windows .ico.
-ICO_PNGS=()
-for s in 16 20 24 32 40 48 64 128 256; do
-  render "$FLAT" "$s" "$TMP/ico-$s.png"
-  ICO_PNGS+=("$TMP/ico-$s.png")
-done
-(cd "$ROOT" && cargo run -q -p xtask -- ico "$DIR/artcraft-launcher.ico" "${ICO_PNGS[@]}")
-
-# macOS .icns.
-ICNS_PNGS=()
-for s in 16 32 64 128 256 512 1024; do
-  render "$MAC" "$s" "$TMP/icns-$s.png"
-  ICNS_PNGS+=("$TMP/icns-$s.png")
-done
-(cd "$ROOT" && cargo run -q -p xtask -- icns "$DIR/artcraft-launcher.icns" "${ICNS_PNGS[@]}")
-
-# Tray icons: a black copy is the macOS menu-bar template (44 px = 22 pt @2x; macOS tints it);
-# the colour mark is for the Windows notification area and Linux/BSD status notifiers.
-sed -E 's/fill="#[0-9a-fA-F]{6}"/fill="#000000"/g' "$SRC" >"$TMP/black.svg"
-render "$TMP/black.svg" 44 "$DIR/tray-black-44.png"
-render "$SRC" 64 "$DIR/tray-64.png"
+(cd "$ROOT" && cargo run -q -p xtask -- ico "$DIR/artcraft-launcher.ico" "$TMP"/ico-{16,20,24,32,40,48,64,128,256}.png)
+(cd "$ROOT" && cargo run -q -p xtask -- icns "$DIR/artcraft-launcher.icns" "$TMP"/icns-{16,32,64,128,256,512,1024}.png)
 echo "icons written to $DIR"

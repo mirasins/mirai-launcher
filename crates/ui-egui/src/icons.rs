@@ -59,7 +59,7 @@ pub fn social(service: &str) -> Option<ImageSource<'static>> {
     })
 }
 
-/// The Mirai mark: the launcher's app icon (`assets/app-icon`), also drawn in the header.
+/// The Mirai Launcher icon (`assets/app-icon`, its SVG master), also drawn in the header.
 pub fn app_mark() -> ImageSource<'static> {
     egui::include_image!("../../../assets/app-icon/artcraft-launcher.svg")
 }

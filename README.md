@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.artcraft-launcher.png" width="128" height="128" alt="Mirai Launcher icon: a purple letter M under a lilac diamond">
+  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.artcraft-launcher.png" width="128" height="128" alt="Mirai Launcher icon: a pink-to-violet orb with the word Mirai">
 </p>
 
 <h1 align="center">ArtCraft Launcher</h1>
@@ -334,7 +334,7 @@ from its repository and licensed like that app (MIT OR Apache-2.0).
 
 **The ArtCraft name, logo and "A" mark are not licensed under MIT or Apache-2.0**: they are
 trademarks of the ArtCraft Team ([`docs/brand/LICENSE-brand.txt`](docs/brand/LICENSE-brand.txt)), and
-forks must remove them. This fork, Mirai Launcher, shows its own Mirai mark instead
+forks must remove them. This fork, Mirai Launcher, shows its own Mirai icon instead
 ([`assets/app-icon/`](assets/app-icon/), MIT OR Apache-2.0).
 
 <p align="center">
