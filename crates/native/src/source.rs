@@ -38,12 +38,12 @@ pub trait ReleaseSource: Send + Sync {
     }
     /// The release `track` follows: the latest stable one, or the chosen nightly or exact version
     /// from [`versions`](Self::versions), with no fallback to another.
-    fn chosen(&self, repo: &str, track: &artcraft_launcher_core::protocol::VersionTrack) -> Answer {
+    fn chosen(&self, repo: &str, track: &artcraft_launcher_core::protocol::VersionTrack, channel: Option<&str>) -> Answer {
         if *track == artcraft_launcher_core::protocol::VersionTrack::Stable {
             return self.latest(repo, false);
         }
         let latest = match self.versions(repo) {
-            Ok(list) => release::choose_version(&list, track).map_or(LatestRelease::None, LatestRelease::Found),
+            Ok(list) => release::choose_version(&list, track, channel).map_or(LatestRelease::None, LatestRelease::Found),
             Err(why) => LatestRelease::Failed(why),
         };
         Answer { latest, source: Source::GitHubApi }
@@ -133,7 +133,7 @@ impl GitHubSource {
         match self.http.get_api(&url, saved.as_ref().and_then(|e| e.etag.as_deref()))? {
             Fetched::Body { text, etag } => {
                 let release = if prereleases {
-                    release::parse_github_release_list(&text, repo, true)?
+                    release::parse_github_release_list(&text, repo, true, None)?
                 } else {
                     Some(release::parse_github_release(&text, repo)?)
                 };

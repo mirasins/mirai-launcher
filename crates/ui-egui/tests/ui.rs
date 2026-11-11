@@ -1415,7 +1415,7 @@ fn only_a_waiting_update_splits_the_main_button() {
     let splits: Vec<String> = h.query_all_by_label_contains("without updating").filter_map(|n| n.accesskit_node().label()).collect();
     assert_eq!(splits.len(), 2, "PhotoCraft and EffectCraft wait for updates: {splits:?}");
     assert!(splits.iter().any(|l| l == "Open 0.5.0 without updating. 0.6.0 stays available."), "{splits:?}");
-    // LightCraft and WordCraft are up to date: each still has one plain Open.
+    // LightCraft and Mirai Words are up to date: each still has one plain Open.
     assert!(h.query_all_by_label("Open").count() >= 2);
     h.get_by_label("Retry install");
 
@@ -1779,6 +1779,9 @@ fn downloads_can_be_paused_resumed_and_discarded() {
     snapshot(&mut h, "grid-downloads-dark");
     h.get_by_label("Download paused");
     h.get_by_label("Reconnecting…");
+    // Mirai Presentations' paused download sorts below the fold: bring it into view first.
+    h.get_by_label_contains("· 25%").scroll_to_me();
+    h.run_steps(4);
     h.get_by_label_contains("· 25%").click();
     h.run_steps(3);
     h.get_all_by_role_and_label(egui::accesskit::Role::Button, "Install").last().unwrap().click();
@@ -1865,8 +1868,8 @@ fn a_kept_update_installs_on_retry_and_an_up_to_date_app_is_not_downloaded_again
     h.get_by_label("Retry update to 0.6.0").click();
     h.run_steps(2);
     assert_eq!(*sent.borrow(), [Command::Install { app: "effectcraft".into() }]);
-    // WordCraft is up to date: its menu offers Reinstall, which uses the kept file.
-    let row = h.get_by_role_and_label(egui::accesskit::Role::Label, "WordCraft").rect().center().y;
+    // LightCraft is up to date: its menu offers Reinstall, which uses the kept file.
+    let row = h.get_by_role_and_label(egui::accesskit::Role::Label, "LightCraft").rect().center().y;
     h.get_all_by_label_contains("More actions").find(|n| (n.rect().center().y - row).abs() < 25.0).unwrap().click();
     h.run_steps(3);
     h.get_by_label("Reinstall");
@@ -1987,22 +1990,22 @@ fn table_view_and_light_theme() {
 fn pinning_an_app_keeps_it_on_top_until_unpinned() {
     let (mut h, _) = harness(ViewMode::Table, egui::Theme::Dark, true);
     h.run_steps(6);
-    // Name sort would put CADCraft before PhotoCraft; a pin must still win.
+    // Name sort would put AniCraft before LightCraft; a pin must still win.
     h.state_mut().as_mut().unwrap().settings.sort = artcraft_launcher_ui_egui::settings::SortKey::Name;
     h.state_mut().as_mut().unwrap().settings.sort_descending = false;
     h.run_steps(2);
-    h.get_by_label("More actions for PhotoCraft").click();
+    h.get_by_label("More actions for LightCraft").click();
     h.run_steps(3);
     h.get_by_label("Pin to top").click();
     h.run_steps(4);
-    assert_eq!(h.state().as_ref().unwrap().settings.pinned, vec!["photocraft".to_string()]);
+    assert_eq!(h.state().as_ref().unwrap().settings.pinned, vec!["lightcraft".to_string()]);
     let ids = h.state().as_ref().unwrap().visible_ids_for_test();
-    assert_eq!(ids.first().copied(), Some("photocraft"), "pinned app stays first under Name sort: {ids:?}");
+    assert_eq!(ids.first().copied(), Some("lightcraft"), "pinned app stays first under Name sort: {ids:?}");
     h.state_mut().as_mut().unwrap().settings.pin_app("filmcraft");
-    h.state_mut().as_mut().unwrap().settings.reorder_pinned_to("photocraft", 2);
+    h.state_mut().as_mut().unwrap().settings.reorder_pinned_to("lightcraft", 2);
     h.run_steps(2);
-    assert_eq!(h.state().as_ref().unwrap().settings.pinned, vec!["filmcraft".to_string(), "photocraft".to_string()]);
-    assert_eq!(&h.state().as_ref().unwrap().visible_ids_for_test()[..2], &["filmcraft", "photocraft"]);
+    assert_eq!(h.state().as_ref().unwrap().settings.pinned, vec!["filmcraft".to_string(), "lightcraft".to_string()]);
+    assert_eq!(&h.state().as_ref().unwrap().visible_ids_for_test()[..2], &["filmcraft", "lightcraft"]);
     h.get_all_by_label_contains("Reorder").next().expect("pinned rows expose reorder handles");
 }
 
@@ -2103,7 +2106,7 @@ fn grid_shows_pinned_section_header() {
 fn a_pinned_table_row_keeps_its_buttons_in_line() {
     let (mut h, _) = harness(ViewMode::Table, egui::Theme::Dark, true);
     h.run_steps(6);
-    // LightCraft and WordCraft are both installed and up to date: each row offers Open.
+    // LightCraft and Mirai Words are both installed and up to date: each row offers Open.
     h.state_mut().as_mut().unwrap().settings.pin_app("lightcraft");
     h.run_steps(4);
     let grip = h.get_all_by_label_contains("Reorder LightCraft").next().expect("pinned row has a grip").rect();
@@ -2111,7 +2114,7 @@ fn a_pinned_table_row_keeps_its_buttons_in_line() {
         let row = menu.y_range();
         h.query_all_by_label("Open").map(|n| n.rect()).find(|r| row.contains(r.center().y)).expect("an Open button in the row")
     };
-    let (pinned_menu, other_menu) = (h.get_by_label("More actions for LightCraft").rect(), h.get_by_label("More actions for WordCraft").rect());
+    let (pinned_menu, other_menu) = (h.get_by_label("More actions for LightCraft").rect(), h.get_by_label("More actions for Mirai Words").rect());
     let (pinned_open, other_open) = (open_in_row(pinned_menu), open_in_row(other_menu));
     assert!(grip.right() <= pinned_open.left(), "grip {grip:?} leads the row's Open {pinned_open:?}");
     assert!((pinned_open.width() - other_open.width()).abs() < 0.5, "pinned {pinned_open:?} vs unpinned {other_open:?}");
@@ -2128,10 +2131,10 @@ fn pin_drag_ignores_targets_clipped_by_the_scroll_viewport() {
         h.state_mut().as_mut().unwrap().settings.pinned = pins.clone();
         h.run_steps(4);
         let grip = h.get_by_label("Reorder PhotoCraft").rect().center();
-        let target = h.get_by_label("WordCraft details").rect();
+        let target = h.get_by_label("Mirai Words details").rect();
         let at = match view {
             ViewMode::Grid => egui::pos2(target.right() - 10.0, target.bottom() - 20.0),
-            ViewMode::Table => egui::pos2(h.get_by_label("Reorder WordCraft").rect().center().x, target.bottom() - 10.0),
+            ViewMode::Table => egui::pos2(h.get_by_label("Reorder Mirai Words").rect().center().x, target.bottom() - 10.0),
         };
         h.hover_at(grip);
         h.run_steps(2);
@@ -2159,7 +2162,7 @@ fn pin_drag_accepts_the_table_grip_column() {
     h.state_mut().as_mut().unwrap().settings.pinned = vec!["photocraft".into(), "lightcraft".into(), "wordcraft".into()];
     h.run_steps(4);
     let from = h.get_by_label("Reorder PhotoCraft").rect().center();
-    let target = h.get_by_label("Reorder WordCraft").rect();
+    let target = h.get_by_label("Reorder Mirai Words").rect();
     h.hover_at(from);
     h.run_steps(2);
     h.drag_at(from);
@@ -2190,7 +2193,7 @@ fn hiding_an_app_removes_it_until_it_is_unhidden() {
     h.get_by_label("Hidden Apps 1").click();
     h.run_steps(4);
     h.get_by_role_and_label(egui::accesskit::Role::Label, "PhotoCraft");
-    assert!(h.query_by_role_and_label(egui::accesskit::Role::Label, "WordCraft").is_none());
+    assert!(h.query_by_role_and_label(egui::accesskit::Role::Label, "Mirai Words").is_none());
     let row = h.get_by_role_and_label(egui::accesskit::Role::Label, "PhotoCraft").rect().center().y;
     h.get_all_by_label_contains("More actions").find(|n| (n.rect().center().y - row).abs() < 25.0).unwrap().click();
     h.run_steps(3);
@@ -2208,7 +2211,7 @@ fn launch_options_are_saved_per_app_and_passed_when_it_opens() {
     let (mut h, sent) = harness(ViewMode::Table, egui::Theme::Dark, true);
     h.run_steps(6);
     let menu = |h: &mut Harness<'static, Option<LauncherUi>>| {
-        h.get_by_label("More actions for WordCraft").click();
+        h.get_by_label("More actions for Mirai Words").click();
         h.run_steps(3);
     };
     menu(&mut h);
@@ -2236,7 +2239,7 @@ fn launch_options_with_an_unclosed_quote_are_not_saved_or_launched() {
     use egui::accesskit::Role;
     let (mut h, sent) = harness(ViewMode::Table, egui::Theme::Dark, true);
     h.run_steps(6);
-    h.get_by_label("More actions for WordCraft").click();
+    h.get_by_label("More actions for Mirai Words").click();
     h.run_steps(3);
     h.get_by_label("Launch options…").click();
     h.run_steps(3);
@@ -2254,7 +2257,7 @@ fn launch_options_with_an_unclosed_quote_are_not_saved_or_launched() {
     // Flags edited by hand in the settings file: the app isn't opened with half of them.
     h.state_mut().as_mut().unwrap().settings.launch_flags.insert("wordcraft".into(), "'oops".into());
     sent.borrow_mut().clear();
-    h.get_by_label("More actions for WordCraft").click();
+    h.get_by_label("More actions for Mirai Words").click();
     h.run_steps(3);
     h.get_all_by_label("Open").last().unwrap().click(); // the menu's
     h.run_steps(3);
@@ -2271,7 +2274,7 @@ fn switching_views() {
     h.run_steps(4);
     assert_eq!(h.state().as_ref().unwrap().settings.view, ViewMode::Table);
     h.get_by_role_and_label(egui::accesskit::Role::Label, "PhotoCraft");
-    h.get_by_role_and_label(egui::accesskit::Role::Label, "WordCraft");
+    h.get_by_role_and_label(egui::accesskit::Role::Label, "Mirai Words");
     // The row icon is decorative; the wordmark carries the name exactly once.
     assert_eq!(h.query_all_by_role_and_label(egui::accesskit::Role::Image, "PhotoCraft").count(), 0, "the table icon must not repeat the wordmark");
     assert_eq!(
@@ -2336,13 +2339,13 @@ fn every_table_column_sorts_both_ways() {
     h.get_by_label("Status").click();
     h.run_steps(3);
     let o = order(&h);
-    assert_eq!(&o[..4], ["PhotoCraft", "EffectCraft", "LightCraft", "WordCraft"], "{o:?}");
+    assert_eq!(&o[..4], ["PhotoCraft", "EffectCraft", "LightCraft", "Mirai Words"], "{o:?}");
     // Reversed: the apps not installed first, then up to date, then the updates last. The table
     // keeps its column's order; only the grid puts installed apps above the rest.
     h.get_by_label("Status").click();
     h.run_steps(3);
     let o = order(&h);
-    assert_eq!(&o[o.len().saturating_sub(4)..], ["LightCraft", "WordCraft", "PhotoCraft", "EffectCraft"], "{o:?}");
+    assert_eq!(&o[o.len().saturating_sub(4)..], ["LightCraft", "Mirai Words", "PhotoCraft", "EffectCraft"], "{o:?}");
     // The old Installed and Latest columns are gone; Version shows the number, and from and to for an update.
     assert!(h.query_by_label("Latest").is_none());
     h.get_by_label("Version");
@@ -2356,7 +2359,7 @@ fn every_table_column_sorts_both_ways() {
     h.get_by_label("App").click();
     h.run_steps(3);
     let o = order(&h);
-    assert_eq!(o.first().map(String::as_str), Some("WordCraft"), "{o:?}");
+    assert_eq!(o.first().map(String::as_str), Some("VectorCraft"), "{o:?}");
 }
 
 /// The first close to the tray is explained once, by a system notification (#45, #215).
@@ -2484,10 +2487,10 @@ fn links_to_the_website_github_and_each_apps_pages() {
     // The table's … menu has the app's website and GitHub repo.
     let (mut h, _) = harness(ViewMode::Table, egui::Theme::Dark, true);
     h.run_steps(6);
-    h.get_all_by_label_contains("More actions").nth(8).unwrap().click(); // WordCraft
+    h.get_all_by_label_contains("More actions").nth(8).unwrap().click(); // Mirai Words
     h.run_steps(3);
     h.get_by_label("GitHub repository");
-    // The footer's Website link and WordCraft's now-live one in the menu.
+    // The footer's Website link and Mirai Words' now-live one in the menu.
     assert!(h.query_all_by_label_contains("Website").count() >= 2);
 }
 
@@ -3262,7 +3265,7 @@ fn clicking_a_card_opens_its_details_drawer() {
     h.run_steps(8);
     // Every app has a page: a card of each generation opens one.
     h.get_by_label("VectorCraft details");
-    h.get_by_label("WordCraft details");
+    h.get_by_label("Mirai Words details");
     h.get_by_label("PhotoCraft details").click();
     h.run_steps(10);
     h.check_accessibility();
@@ -3337,9 +3340,9 @@ fn opening_a_page_asks_for_its_pictures_once_and_only_while_it_lacks_some() {
     assert_eq!(fetches(&sent, "vectorcraft"), 1);
     h.key_press(egui::Key::Escape);
     h.run_steps(10);
-    h.get_by_label("PdfCraft details").scroll_to_me();
+    h.get_by_label("Mirai Reader details").scroll_to_me();
     h.run_steps(3);
-    h.get_by_label("PdfCraft details").click();
+    h.get_by_label("Mirai Reader details").click();
     h.run_steps(10);
     assert_eq!(fetches(&sent, "pdfcraft"), 0);
 }
@@ -3414,10 +3417,10 @@ fn the_enlarged_view_shows_a_frame_for_a_picture_still_missing() {
 fn a_page_without_pictures_has_no_gallery() {
     let (mut h, _sent) = harness(ViewMode::Grid, egui::Theme::Dark, true);
     h.run_steps(8);
-    // PdfCraft's screenshots still show its old name (PrintCraft), so its page has none for now.
-    h.get_by_label("PdfCraft details").scroll_to_me();
+    // Mirai Reader's screenshots still show its old name (PrintCraft), so its page has none for now.
+    h.get_by_label("Mirai Reader details").scroll_to_me();
     h.run_steps(3);
-    h.get_by_label("PdfCraft details").click();
+    h.get_by_label("Mirai Reader details").click();
     h.run_steps(10);
     snapshot(&mut h, "details-no-pictures-dark");
     h.get_all_by_label_contains("The open-source PDF workbench.").last().unwrap();
@@ -3456,7 +3459,7 @@ fn the_lead_picture_can_be_enlarged() {
     assert_eq!(h.query_all_by_label_contains("The image editor you already know").count(), 1);
 }
 
-/// Every page, whatever it holds: no pictures (PdfCraft), one (DesignCraft) or several. The arrow keys are
+/// Every page, whatever it holds: no pictures (Mirai Reader), one (DesignCraft) or several. The arrow keys are
 /// pressed more often than there are pictures, both ways, to wrap around the list and to do nothing on a
 /// page that has one or none; the enlarged view is opened wherever there is a picture to enlarge.
 #[test]
@@ -3815,7 +3818,9 @@ fn with_animations_on_the_wheel_glides() {
 /// Moves the pointer from one card to the next. Returns how many frames are drawn before the
 /// window is still again.
 fn frames_to_hover_the_next_card(h: &mut Harness<'_, Option<LauncherUi>>) -> u64 {
-    let cards: Vec<egui::Pos2> = ["Image editing", "Vector illustration"].map(|t| h.get_by_label(t).rect().center()).to_vec();
+    // Two cards of the first row, both in view in the short window.
+    let cards: Vec<egui::Pos2> =
+        ["Motion graphics and visual effects", "Photo library and raw development"].map(|t| h.get_by_label(t).rect().center()).to_vec();
     // Still to begin with: the icons are in, the first card is lit and the scroll bar is showing.
     h.hover_at(cards[0]);
     h.run();
@@ -4271,12 +4276,12 @@ fn opening_an_app_counts_and_frequently_used_puts_the_most_opened_first() {
     // Installed apps in name order: Effect (updates), Light (Open), Photo (updates), Word (Open).
     let opens: Vec<_> = h.get_all_by_label("Open").collect();
     assert_eq!(opens.len(), 2);
-    opens[1].click(); // WordCraft
+    opens[1].click(); // Mirai Words
     h.run_steps(3);
     assert!(sent.borrow().contains(&Command::Launch { app: "wordcraft".into(), args: vec![] }));
     assert_eq!(h.state().as_ref().unwrap().settings.launches.get("wordcraft"), Some(&1));
     h.run_steps(4);
-    let word = h.get_by_label("WordCraft details").rect();
+    let word = h.get_by_label("Mirai Words details").rect();
     let light = h.get_by_label("LightCraft details").rect();
     assert!(word.min.y < light.min.y || (word.min.y == light.min.y && word.min.x < light.min.x), "{word:?} {light:?}");
 }
@@ -4294,11 +4299,12 @@ fn an_apps_page_is_a_card_in_the_middle_with_next_and_previous_arrows_and_closes
     // A card with a margin of window all round, not a panel against one edge.
     let close = h.get_by_label("Close (Esc)").rect();
     assert!(close.right() < 1180.0 - 24.0 && close.left() > 24.0, "{close:?}");
-    // Next goes to the following app in the grid's order (Word after Photo), and back again.
-    h.get_by_label("Next app").click();
+    // Previous goes to the app before it in the grid's order (Mirai Words before Photo), and Next
+    // back again.
+    h.get_by_label("Previous app").click();
     h.run_steps(12);
     assert!(showing(&h, "wordcraft"));
-    h.get_by_label("Previous app").click();
+    h.get_by_label("Next app").click();
     h.run_steps(12);
     assert!(showing(&h, "photocraft"));
     // A click on the card's own margin keeps it open (the card is 1116 wide, centred in 1180).

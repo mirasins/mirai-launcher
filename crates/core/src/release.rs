@@ -188,12 +188,13 @@ pub fn has_published_checksum(r: &Release) -> bool {
     r.sums_asset().is_some() || r.assets.iter().any(|a| a.sha256.is_some())
 }
 
-pub fn choose_version(releases: &[Release], track: &crate::protocol::VersionTrack) -> Option<Release> {
+/// The release `track` follows; with `channel`, a fork's `<channel>.N` builds count as stable.
+pub fn choose_version(releases: &[Release], track: &crate::protocol::VersionTrack, channel: Option<&str>) -> Option<Release> {
     use crate::protocol::VersionTrack;
     match track {
         VersionTrack::Stable => releases
             .iter()
-            .filter(|r| !r.prerelease && r.version.as_ref().is_some_and(version::is_stable))
+            .filter(|r| !r.prerelease && r.version.as_ref().is_some_and(|v| version::is_stable_in(v, channel)))
             .max_by(|a, b| a.version.cmp(&b.version))
             .cloned(),
         VersionTrack::Nightly => releases.iter().filter(|r| is_nightly(r) && has_published_checksum(r)).max_by_key(|r| r.published_at).cloned(),
@@ -202,8 +203,8 @@ pub fn choose_version(releases: &[Release], track: &crate::protocol::VersionTrac
 }
 
 /// Reads `GET /repos/<repo>/releases` and returns the newest stable (or any, with
-/// `allow_prerelease`) published release.
-pub fn parse_github_release_list(json: &str, repo: &str, allow_prerelease: bool) -> Result<Option<Release>, String> {
+/// `allow_prerelease`) published release; a fork's `channel` builds count as stable.
+pub fn parse_github_release_list(json: &str, repo: &str, allow_prerelease: bool, channel: Option<&str>) -> Result<Option<Release>, String> {
     let v: serde_json::Value = serde_json::from_str(json).map_err(|e| format!("unreadable answer from GitHub ({e})"))?;
     let list = v.as_array().ok_or("unexpected answer from GitHub")?;
     let mut best: Option<Release> = None;
@@ -213,7 +214,7 @@ pub fn parse_github_release_list(json: &str, repo: &str, allow_prerelease: bool)
         }
         let Ok(r) = release_from_value(item, repo) else { continue };
         let Some(ver) = r.version.as_ref() else { continue };
-        if !allow_prerelease && (r.prerelease || !version::is_stable(ver)) {
+        if !allow_prerelease && (r.prerelease || !version::is_stable_in(ver, channel)) {
             continue;
         }
         let newer = best.as_ref().and_then(|b| b.version.as_ref()).is_none_or(|b| version::is_newer(ver, b));
@@ -487,7 +488,7 @@ mod tests {
             ..Default::default()
         };
         nightly.assets.push(Asset { name: "app.zip".into(), size: 3, url: "https://example.invalid/app.zip".into(), sha256: None });
-        assert!(choose_version(&[nightly], &crate::protocol::VersionTrack::Nightly).is_none());
+        assert!(choose_version(&[nightly], &crate::protocol::VersionTrack::Nightly, None).is_none());
     }
 
     #[test]
@@ -503,11 +504,11 @@ mod tests {
         for r in list.iter_mut().filter(|r| is_nightly(r)) {
             r.assets.push(Asset { name: "app.zip".into(), size: 3, url: "https://example.invalid/app.zip".into(), sha256: Some(HASH.into()) });
         }
-        assert_eq!(choose_version(&list, &VersionTrack::Stable).unwrap().tag, "v0.7.0");
-        assert_eq!(choose_version(&list, &VersionTrack::Nightly).unwrap().tag, "v0.8.0-nightly.20261028");
-        assert_eq!(choose_version(&list, &VersionTrack::Pinned("v0.6.0".into())).unwrap().tag, "v0.6.0");
-        assert!(choose_version(&list, &VersionTrack::Pinned("v9.0.0".into())).is_none());
-        assert!(choose_version(&list[3..], &VersionTrack::Nightly).is_none());
+        assert_eq!(choose_version(&list, &VersionTrack::Stable, None).unwrap().tag, "v0.7.0");
+        assert_eq!(choose_version(&list, &VersionTrack::Nightly, None).unwrap().tag, "v0.8.0-nightly.20261028");
+        assert_eq!(choose_version(&list, &VersionTrack::Pinned("v0.6.0".into()), None).unwrap().tag, "v0.6.0");
+        assert!(choose_version(&list, &VersionTrack::Pinned("v9.0.0".into()), None).is_none());
+        assert!(choose_version(&list[3..], &VersionTrack::Nightly, None).is_none());
     }
 
     #[test]
@@ -518,9 +519,34 @@ mod tests {
             {"tag_name":"v0.7.0","draft":true,"assets":[]},
             {"tag_name":"v0.5.0","prerelease":false,"draft":false,"assets":[]},
             {"tag_name":"v0.4.0","prerelease":false,"draft":false,"assets":[]}]"#;
-        assert_eq!(parse_github_release_list(json, REPO, false).unwrap().unwrap().tag, "v0.5.0");
-        assert_eq!(parse_github_release_list(json, REPO, true).unwrap().unwrap().tag, "v0.6.0-rc.1");
-        assert_eq!(parse_github_release_list("[]", REPO, false).unwrap(), None);
+        assert_eq!(parse_github_release_list(json, REPO, false, None).unwrap().unwrap().tag, "v0.5.0");
+        assert_eq!(parse_github_release_list(json, REPO, true, None).unwrap().unwrap().tag, "v0.6.0-rc.1");
+        assert_eq!(parse_github_release_list("[]", REPO, false, None).unwrap(), None);
+    }
+
+    #[test]
+    fn choose_version_with_mirai_channel_picks_mirai_releases() {
+        use crate::protocol::VersionTrack;
+        use crate::version::Version;
+        let mirai_releases = vec![
+            Release {
+                tag: "v0.18.2-mirai.1".into(),
+                version: Some(Version::parse("0.18.2-mirai.1").unwrap()),
+                prerelease: false,
+                ..Default::default()
+            },
+            Release {
+                tag: "v0.18.1-mirai.3".into(),
+                version: Some(Version::parse("0.18.1-mirai.3").unwrap()),
+                prerelease: false,
+                ..Default::default()
+            },
+            Release { tag: "v0.19.0-rc.1".into(), version: Some(Version::parse("0.19.0-rc.1").unwrap()), prerelease: true, ..Default::default() },
+        ];
+        let chosen = choose_version(&mirai_releases, &VersionTrack::Stable, Some("mirai")).unwrap();
+        assert_eq!(chosen.tag, "v0.18.2-mirai.1");
+        // Without channel, mirai versions are not stable
+        assert!(choose_version(&mirai_releases, &VersionTrack::Stable, None).is_none());
     }
 
     #[test]

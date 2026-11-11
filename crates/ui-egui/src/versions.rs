@@ -119,7 +119,7 @@ impl LauncherUi {
         let latest = list
             .as_ref()
             .and_then(|r| r.as_ref().ok())
-            .and_then(|releases| choose_version(releases, &VersionTrack::Stable))
+            .and_then(|releases| choose_version(releases, &VersionTrack::Stable, app.channel))
             .filter(|r| self.has_version_download(app, r))
             .map(|r| r.tag);
         let latest_label = |tag: &str| crate::fmt(tl!("{version} (latest release)"), &[("version", tag)]);
@@ -300,7 +300,7 @@ impl LauncherUi {
     fn kept_behind(&self, entry: &crate::model::AppEntry) -> Option<String> {
         let track = self.settings.versions.get(entry.app.id)?;
         let releases = self.version_lists.get(entry.app.id)?.as_ref().ok()?;
-        behind(track, entry.installed.as_ref()?.version.as_ref()?, releases)
+        behind(track, entry.installed.as_ref()?.version.as_ref()?, releases, entry.app.channel)
     }
 
     /// Asks once for the published versions of each app kept on an exact version, so its card can
@@ -323,11 +323,11 @@ fn version_facts(date: Option<String>, size: Option<u64>) -> String {
 
 /// The newest stable release in `releases`, when `track` keeps an exact version and that release is
 /// newer than `installed`.
-fn behind(track: &VersionTrack, installed: &version::Version, releases: &[Release]) -> Option<String> {
+fn behind(track: &VersionTrack, installed: &version::Version, releases: &[Release], channel: Option<&str>) -> Option<String> {
     if !matches!(track, VersionTrack::Pinned(_)) {
         return None;
     }
-    let newest = choose_version(releases, &VersionTrack::Stable)?;
+    let newest = choose_version(releases, &VersionTrack::Stable, channel)?;
     newest.version.as_ref().is_some_and(|v| version::is_newer(v, installed)).then(|| newest.version_label())
 }
 
@@ -355,12 +355,12 @@ mod tests {
         let pinned = VersionTrack::Pinned("v0.16.0".into());
         let installed = |v: &str| version::parse(v).unwrap();
         // Kept on 0.16.0 with 0.17.0 out: noted, and a nightly is never "the latest".
-        assert_eq!(behind(&pinned, &installed("0.16.0"), &releases), Some("0.17.0".to_string()));
+        assert_eq!(behind(&pinned, &installed("0.16.0"), &releases, None), Some("0.17.0".to_string()));
         // Up to date, or ahead: nothing to say.
-        assert_eq!(behind(&pinned, &installed("0.17.0"), &releases), None);
-        assert_eq!(behind(&pinned, &installed("0.18.0"), &releases), None);
+        assert_eq!(behind(&pinned, &installed("0.17.0"), &releases, None), None);
+        assert_eq!(behind(&pinned, &installed("0.18.0"), &releases, None), None);
         // Following the latest release or nightly is not keeping a version.
-        assert_eq!(behind(&VersionTrack::Stable, &installed("0.16.0"), &releases), None);
-        assert_eq!(behind(&VersionTrack::Nightly, &installed("0.16.0"), &releases), None);
+        assert_eq!(behind(&VersionTrack::Stable, &installed("0.16.0"), &releases, None), None);
+        assert_eq!(behind(&VersionTrack::Nightly, &installed("0.16.0"), &releases, None), None);
     }
 }

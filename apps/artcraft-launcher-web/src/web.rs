@@ -175,7 +175,7 @@ impl WebBackend {
             events.borrow_mut().push(Event::CheckStarted);
             let mut limited = None;
             for app in &SUITE {
-                let latest = latest(app.repo, pre).await;
+                let latest = latest(app.repo, pre, app.channel).await;
                 if let Err(Some(reset)) = &latest {
                     limited = Some(*reset);
                 }
@@ -185,7 +185,7 @@ impl WebBackend {
                 events.borrow_mut().push(Event::Latest { app: app.id.to_string(), latest, from: Origin::GitHub });
                 ctx.request_repaint();
             }
-            if let Ok(LatestRelease::Found(r)) = latest(catalog::LAUNCHER_REPO, false).await
+            if let Ok(LatestRelease::Found(r)) = latest(catalog::LAUNCHER_REPO, false, None).await
                 && let (Some(l), Some(c)) = (r.version.as_ref(), version::parse(env!("CARGO_PKG_VERSION")))
                 && version::is_newer(l, &c)
             {
@@ -243,7 +243,8 @@ async fn picture(url: &str) -> Result<Vec<u8>, PictureError> {
 }
 
 /// The latest release; `Err(Some(reset))` when rate-limited, `Err(None)` on other failures.
-async fn latest(repo: &str, prereleases: bool) -> Result<LatestRelease, Option<i64>> {
+/// `channel` names a fork's release channel (`CraftApp::channel`), whose tags count as stable.
+async fn latest(repo: &str, prereleases: bool, channel: Option<&str>) -> Result<LatestRelease, Option<i64>> {
     let url = if prereleases {
         format!("https://api.github.com/repos/{repo}/releases?per_page=30")
     } else {
@@ -267,7 +268,7 @@ async fn latest(repo: &str, prereleases: bool) -> Result<LatestRelease, Option<i
     }
     let text = JsFuture::from(resp.text().map_err(|_| None)?).await.map_err(|_| None)?.as_string().ok_or(None)?;
     let found: Option<Release> = if prereleases {
-        release::parse_github_release_list(&text, repo, true).map_err(|_| None)?
+        release::parse_github_release_list(&text, repo, true, channel).map_err(|_| None)?
     } else {
         Some(release::parse_github_release(&text, repo).map_err(|_| None)?)
     };

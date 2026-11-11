@@ -51,6 +51,9 @@ pub struct CraftApp {
     /// while those builds carry no signature the launcher can check: it then opens a copy that's
     /// there and links to the releases, but installs nothing.
     pub mac_team: Option<&'static str>,
+    /// Pre-release label that stable versions of a fork carry (e.g. `mirai` for `0.18.2-mirai.1`).
+    /// `None` for official apps.
+    pub channel: Option<&'static str>,
 }
 
 impl CraftApp {
@@ -143,6 +146,23 @@ const fn app(
         former_bundles: &[],
         site: None,
         mac_team: Some(ARTCRAFT_TEAM_ID),
+        channel: None,
+    }
+}
+
+/// A Mirai fork of a Craft App, published by the fork's owner from its own repository
+/// (`mirasins/mirai-*-fork`) with `X.Y.Z-mirai.N` stable versions. It keeps upstream's ids (asset
+/// stems, bundle id, the MSI's publisher), so an upstream copy is found and updated in place. It is
+/// one of the launcher's own apps, so it stays [`AppKind::Official`]: listed, drawn and never hidden
+/// like the rest of the suite; only its repository and channel differ.
+const fn mirai(base: CraftApp) -> CraftApp {
+    CraftApp {
+        publisher: "Mirai",
+        // Its macOS builds carry no signature the launcher can check: on macOS it opens a copy
+        // that's there but installs nothing.
+        mac_team: None,
+        channel: Some("mirai"),
+        ..base
     }
 }
 
@@ -166,14 +186,15 @@ pub const SUITE: [CraftApp; 19] = [
     ),
     CraftApp {
         former_ids: &["printcraft"],
-        former_names: &["PrintCraft"],
-        ..app(
+        former_names: &["PdfCraft", "PrintCraft"],
+        site: Some("https://github.com/mirasins/mirai-reader-pdfcraft-fork"),
+        ..mirai(app(
             "pdfcraft",
-            "PdfCraft",
+            "Mirai Reader",
             "Reading, organizing and protecting PDFs",
             [[0xe8, 0x20, 0x4f], [0xb7, 0x02, 0x28], [0xf2, 0x3a, 0x62]],
-            "storytold/pdfcraft",
-        )
+            "mirasins/mirai-reader-pdfcraft-fork",
+        ))
     },
     app(
         "effectcraft",
@@ -201,7 +222,17 @@ pub const SUITE: [CraftApp; 19] = [
         [[0x02, 0xda, 0x96], [0x04, 0x7a, 0x56], [0x4f, 0xe8, 0xb6]],
         "storytold/figcraft",
     ),
-    app("wordcraft", "WordCraft", "Writing and document design", [[0x3f, 0x5f, 0xe0], [0x2a, 0x44, 0xb8], [0x8e, 0xa2, 0xff]], "storytold/wordcraft"),
+    CraftApp {
+        former_names: &["WordCraft"],
+        site: Some("https://github.com/mirasins/mirai-words-wordcraft-fork"),
+        ..mirai(app(
+            "wordcraft",
+            "Mirai Words",
+            "Writing and document design",
+            [[0x3f, 0x5f, 0xe0], [0x2a, 0x44, 0xb8], [0x8e, 0xa2, 0xff]],
+            "mirasins/mirai-words-wordcraft-fork",
+        ))
+    },
     app(
         "soundcraft",
         "SoundCraft",
@@ -209,13 +240,17 @@ pub const SUITE: [CraftApp; 19] = [
         [[0x1f, 0xa5, 0xc9], [0x0e, 0x72, 0x90], [0x5f, 0xd0, 0xee]],
         "storytold/soundcraft",
     ),
-    app(
-        "deckcraft",
-        "DeckCraft",
-        "Presentations and slide shows",
-        [[0xf0, 0x7a, 0x1e], [0xa8, 0x4f, 0x0a], [0xff, 0xa0, 0x60]],
-        "storytold/deckcraft",
-    ),
+    CraftApp {
+        former_names: &["DeckCraft"],
+        site: Some("https://github.com/mirasins/mirai-presentations-deckcraft-fork"),
+        ..mirai(app(
+            "deckcraft",
+            "Mirai Presentations",
+            "Presentations and slide shows",
+            [[0xf0, 0x7a, 0x1e], [0xa8, 0x4f, 0x0a], [0xff, 0xa0, 0x60]],
+            "mirasins/mirai-presentations-deckcraft-fork",
+        ))
+    },
     app(
         "cadcraft",
         "CADCraft",
@@ -223,7 +258,17 @@ pub const SUITE: [CraftApp; 19] = [
         [[0x3e, 0xa6, 0xe8], [0x1a, 0x6f, 0xa8], [0x7c, 0xc8, 0xff]],
         "storytold/cadcraft",
     ),
-    app("gridcraft", "GridCraft", "Spreadsheets and data", [[0x1f, 0x9d, 0x55], [0x12, 0x70, 0x3a], [0x4f, 0xd6, 0x8a]], "storytold/gridcraft"),
+    CraftApp {
+        former_names: &["GridCraft"],
+        site: Some("https://github.com/mirasins/mirai-calc-gridcraft-fork"),
+        ..mirai(app(
+            "gridcraft",
+            "Mirai Calc",
+            "Spreadsheets and data",
+            [[0x1f, 0x9d, 0x55], [0x12, 0x70, 0x3a], [0x4f, 0xd6, 0x8a]],
+            "mirasins/mirai-calc-gridcraft-fork",
+        ))
+    },
     app(
         "texturecraft",
         "TextureCraft",
@@ -295,6 +340,8 @@ pub const WEBSITE_URL: &str = "https://getartcraft.com";
 /// The GitHub account every official Craft App's repository lives under. The release feed can
 /// only move an app within it; a community app installs from its own repo, pinned in [`SUITE`].
 pub const GITHUB_OWNER: &str = "storytold";
+/// The GitHub account the Mirai forks (apps with `channel = Some("mirai")`) are published under.
+pub const MIRAI_OWNER: &str = "mirasins";
 /// ArtCraft on GitHub: every Craft App's source.
 pub const GITHUB_URL: &str = "https://github.com/storytold";
 /// ArtCraft's social accounts: (service, URL). Shown as small icons, less prominent than Discord.
@@ -379,9 +426,12 @@ mod tests {
         ids.dedup();
         assert_eq!(ids.len(), SUITE.len());
         for a in &SUITE {
-            // `Craft Anything` is `craft-anything`.
-            assert_eq!(a.name.to_lowercase().replace(' ', "-"), a.id);
+            // `Craft Anything` is `craft-anything`; Mirai apps keep their original ids.
+            if a.id != "craft-anything" && a.channel.is_none() {
+                assert_eq!(a.name.to_lowercase().replace(' ', "-"), a.id);
+            }
             match a.kind {
+                AppKind::Official if a.channel.is_some() => assert_eq!(a.repo.split('/').next(), Some(MIRAI_OWNER), "{}", a.id),
                 AppKind::Official => assert_eq!(a.repo, format!("storytold/{}", a.id)),
                 AppKind::Community => assert!(!a.repo.starts_with("storytold/"), "{} is community", a.id),
             }
@@ -395,12 +445,13 @@ mod tests {
         assert_eq!(sc.repo, "tangency-labs/solidcraft");
         assert_eq!(sc.bundle_id(), "io.tangencylabs.solidcraft");
         assert_eq!(sc.bundle_ids().collect::<Vec<_>>(), ["io.tangencylabs.solidcraft", "ai.storyteller.solidcraft", "ai.storyteller.solvecraft"]);
-        assert_eq!(CraftApp::by_id("gridcraft").unwrap().bundle_id(), "ai.storyteller.gridcraft");
-        assert_eq!(CraftApp::by_id("gridcraft").unwrap().kind, AppKind::Official);
+        let gc = CraftApp::by_id("gridcraft").unwrap();
+        assert_eq!(gc.bundle_id(), "ai.storyteller.gridcraft");
+        assert_eq!(gc.kind, AppKind::Official);
         assert_eq!(sc.website(), "https://solidcraft.io");
         assert!(sc.installs(crate::PackageKind::Dmg) && sc.installs(crate::PackageKind::Msi) && sc.installs(crate::PackageKind::Flatpak));
         assert_eq!(sc.mac_team, Some("G5QA5U5X2S"));
-        assert_eq!(CraftApp::by_id("gridcraft").unwrap().mac_team, Some(ARTCRAFT_TEAM_ID));
+        assert_eq!(CraftApp::by_id("gridcraft").unwrap().mac_team, None);
     }
 
     #[test]
@@ -458,9 +509,11 @@ mod tests {
     fn pdfcraft_also_answers_to_printcraft() {
         let pdf = CraftApp::by_id("pdfcraft").unwrap();
         assert_eq!(pdf.stems().collect::<Vec<_>>(), ["pdfcraft", "printcraft"]);
-        assert_eq!(pdf.names().collect::<Vec<_>>(), ["PdfCraft", "PrintCraft"]);
-        assert_eq!(pdf.website(), "https://getartcraft.com/apps/pdfcraft");
-        assert_eq!(CraftApp::by_id("wordcraft").unwrap().website(), "https://getartcraft.com/apps/wordcraft");
+        assert_eq!(pdf.names().collect::<Vec<_>>(), ["Mirai Reader", "PdfCraft", "PrintCraft"]);
+        assert_eq!(pdf.website(), "https://github.com/mirasins/mirai-reader-pdfcraft-fork");
+        let wc = CraftApp::by_id("wordcraft").unwrap();
+        assert_eq!(wc.website(), "https://github.com/mirasins/mirai-words-wordcraft-fork");
+        assert_eq!(wc.names().collect::<Vec<_>>(), ["Mirai Words", "WordCraft"]);
     }
 
     /// Apps can specify custom macOS bundle names and platform support.
@@ -491,5 +544,20 @@ mod tests {
         assert!(custom.runs_on(crate::Os::Linux));
         assert!(custom.runs_on(crate::Os::MacOs));
         assert!(custom.runs_on(crate::Os::Windows));
+    }
+
+    #[test]
+    fn mirai_apps_install_from_their_forks() {
+        for (id, upstream_name) in [("pdfcraft", "PdfCraft"), ("wordcraft", "WordCraft"), ("deckcraft", "DeckCraft"), ("gridcraft", "GridCraft")] {
+            let app = CraftApp::by_id(id).unwrap();
+            assert!(app.repo.starts_with(&format!("{MIRAI_OWNER}/mirai-")), "{id}: {}", app.repo);
+            assert_eq!(app.kind, AppKind::Official);
+            assert_eq!(app.channel, Some("mirai"));
+            assert_eq!(app.mac_team, None);
+            assert_eq!(app.publisher, "Mirai");
+            assert_eq!(app.msi_publisher, None);
+            // An installed upstream copy is still recognised, and updated in place.
+            assert!(app.former_names.contains(&upstream_name), "{id} should list {upstream_name}");
+        }
     }
 }
