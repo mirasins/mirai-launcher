@@ -175,10 +175,16 @@ impl LauncherUi {
             if bar == TitleBar::MacOs {
                 ui.add_space(TRAFFIC_LIGHTS_W);
             }
-            // The ArtCraft wordmark exactly as supplied, in its own cell.
-            let logo = vec2(14.0 * crate::icons::ARTCRAFT_LOGO_ASPECT, 14.0);
-            let (cell, _) = ui.allocate_exact_size(vec2(logo.x + 40.0, h), Sense::hover());
-            egui::Image::new(crate::icons::artcraft_logo(t.dark)).alt_text(tl!("ArtCraft")).paint_at(ui, Rect::from_center_size(cell.center(), logo));
+            // The Mirai mark and name, in their own cell.
+            let mark = 18.0;
+            let name = ui.painter().layout_no_wrap("Mirai".to_string(), egui::FontId::new(16.0, crate::theme::display()), t.ink_strong);
+            let width = mark + 8.0 + name.size().x;
+            let (cell, _) = ui.allocate_exact_size(vec2(width + 40.0, h), Sense::hover());
+            let left = cell.center().x - width / 2.0;
+            egui::Image::new(crate::icons::app_mark())
+                .alt_text("Mirai")
+                .paint_at(ui, Rect::from_min_size(egui::pos2(left, cell.center().y - mark / 2.0), vec2(mark, mark)));
+            ui.painter().galley(egui::pos2(left + mark + 8.0, cell.center().y - name.size().y / 2.0), name, t.ink_strong);
             ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
                 if bar == TitleBar::Custom {
                     widgets::window_buttons(ui, h);
