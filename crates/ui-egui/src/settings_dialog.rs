@@ -54,7 +54,7 @@ impl LauncherUi {
             ui,
             Some(crate::icons::artcraft_mark()),
             tl!("Settings"),
-            &format!("ArtCraft Launcher {}", env!("CARGO_PKG_VERSION")),
+            &format!("{} {}", artcraft_launcher_core::brand::APP_NAME, env!("CARGO_PKG_VERSION")),
             |_| {},
         );
 

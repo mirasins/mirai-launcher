@@ -46,7 +46,11 @@ fn load_icon() -> Result<tray_icon::Icon, String> {
 /// Windows and macOS keep tray-icon's defaults: there the title is drawn next to the icon (macOS)
 /// or unsupported (Windows), and the id never reaches the user.
 fn identity(builder: TrayIconBuilder) -> TrayIconBuilder {
-    if cfg!(any(target_os = "macos", target_os = "windows")) { builder } else { builder.with_id("artcraft-launcher").with_title("ArtCraft Launcher") }
+    if cfg!(any(target_os = "macos", target_os = "windows")) {
+        builder
+    } else {
+        builder.with_id("artcraft-launcher").with_title(artcraft_launcher_core::brand::APP_NAME)
+    }
 }
 
 impl Tray {
@@ -72,7 +76,11 @@ impl Tray {
         let builder = builder.with_icon_templated(image);
         #[cfg(not(target_os = "macos"))]
         let builder = builder.with_icon(image);
-        let icon = builder.with_menu_on_left_click(cfg!(target_os = "macos")).with_tooltip("ArtCraft Launcher").build().map_err(|e| e.to_string())?;
+        let icon = builder
+            .with_menu_on_left_click(cfg!(target_os = "macos"))
+            .with_tooltip(artcraft_launcher_core::brand::APP_NAME)
+            .build()
+            .map_err(|e| e.to_string())?;
         let (tx, rx): (Sender<TrayAction>, Receiver<TrayAction>) = channel();
         let (show_id, check_id, quit_id) = (show.id().clone(), check.id().clone(), quit.id().clone());
         {
@@ -130,7 +138,7 @@ impl Tray {
             self.language = lang.code().to_string();
         }
         let tip = if count == 0 {
-            "ArtCraft Launcher".to_string()
+            artcraft_launcher_core::brand::APP_NAME.to_string()
         } else {
             i18n::trn(lang, count as u64, "ArtCraft Launcher · {n} update available", "ArtCraft Launcher · {n} updates available")
         };

@@ -27,18 +27,18 @@
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
      xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
   <Package
-      Name="ArtCraft Launcher"
+      Name="Mirai Launcher"
       Manufacturer="Learning Machines LLC"
       Version="$(var.Version)"
       UpgradeCode="1AC08DBF-D4CF-4BA4-A81E-CAA5C1004974"
       Scope="perUser"
       Compressed="yes"
       Language="1033">
-    <SummaryInformation Description="ArtCraft Launcher: install and update the Craft App Suite" Manufacturer="Learning Machines LLC" />
+    <SummaryInformation Description="Mirai Launcher: install and update the Craft App Suite" Manufacturer="Learning Machines LLC" />
     <!-- Same-version upgrades let successive pre-releases of one X.Y.Z replace each other
          (MSI versions are numeric, so 1.2.3-rc.1 and 1.2.3-rc.2 are both 1.2.3). -->
     <MajorUpgrade AllowSameVersionUpgrades="yes"
-        DowngradeErrorMessage="A newer version of ArtCraft Launcher is already installed." />
+        DowngradeErrorMessage="A newer version of Mirai Launcher is already installed." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
 
     <!-- The Apps & features icon only. MSI caches it under %APPDATA%\Microsoft\Installer\{ProductCode},
@@ -87,7 +87,7 @@
     <SetProperty Id="DESKTOPSHORTCUTCHOICE" Action="RememberDesktopShortcut" Value="1" Before="InstallInitialize" Sequence="execute"
         Condition="INSTALLDESKTOPSHORTCUT = &quot;1&quot;" />
 
-    <Feature Id="Main" Title="ArtCraft Launcher" Level="1">
+    <Feature Id="Main" Title="Mirai Launcher" Level="1">
       <ComponentGroupRef Id="ArtCraftLauncherFiles" />
     </Feature>
 
@@ -142,8 +142,8 @@
     <Property Id="ArtCraftLauncherVersion" Value="$(var.DisplayVersion)" />
 
     <!-- Finish page: say where to find the launcher, and offer to start it (ticked by default). -->
-    <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="ArtCraft Launcher $(var.DisplayVersion) is installed. Start it any time from the Start menu to install and update the Craft App Suite." />
-    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch ArtCraft Launcher" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Mirai Launcher $(var.DisplayVersion) is installed. Start it any time from the Start menu to install and update the Craft App Suite." />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch Mirai Launcher" />
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
     <Property Id="WixShellExecTarget" Value="[#ArtCraftLauncherExe]" />
     <!-- Runs in the wizard's own process, so the launcher starts as the user. -->
@@ -166,7 +166,7 @@
       </Component>
 
       <Component Id="ArtCraftLauncherShortcut" Directory="ProgramMenuFolder" Guid="870F3DFA-BC0F-497F-85D5-A361B04826AF">
-        <Shortcut Id="StartMenuShortcut" Name="ArtCraft Launcher"
+        <Shortcut Id="StartMenuShortcut" Name="Mirai Launcher"
             Description="Install and update the Craft App Suite"
             Target="[#ArtCraftLauncherExe]" WorkingDirectory="INSTALLFOLDER">
           <ShortcutProperty Key="System.AppUserModel.ID" Value="ai.storyteller.artcraft-launcher" />
@@ -177,7 +177,7 @@
       <!-- Only when the folder page's box is ticked; removed on uninstall like everything else. -->
       <Component Id="ArtCraftLauncherDesktopShortcut" Directory="DesktopFolder" Guid="CF06DCF3-BE5A-4A2B-B3BF-F553CC6E5D60"
           Condition="INSTALLDESKTOPSHORTCUT = &quot;1&quot;">
-        <Shortcut Id="DesktopShortcut" Name="ArtCraft Launcher"
+        <Shortcut Id="DesktopShortcut" Name="Mirai Launcher"
             Description="Install and update the Craft App Suite"
             Target="[#ArtCraftLauncherExe]" WorkingDirectory="INSTALLFOLDER">
           <ShortcutProperty Key="System.AppUserModel.ID" Value="ai.storyteller.artcraft-launcher" />

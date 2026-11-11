@@ -316,14 +316,16 @@ pub const DISCORD_APP_URL: &str = "discord://-/invite/artcraft";
 /// `ArtCraft Launcher.app`). Not part of [`SUITE`].
 pub const LAUNCHER: CraftApp = app(
     "artcraft-launcher",
+    // An identifier here: the registry key and the macOS bundle it installs under. The fork's
+    // name is shown through `crate::brand`.
     "ArtCraft Launcher",
     "Installs and updates the Craft App Suite",
     [[0x0b, 0x0b, 0x0c], [0x0b, 0x0b, 0x0c], [0xf2, 0xf1, 0xee]],
-    "storytold/craft-launcher",
+    "mirasins/mirai-launcher",
 );
 
 /// The launcher's own repo, checked so it can say when a newer launcher is out.
-pub const LAUNCHER_REPO: &str = "storytold/craft-launcher";
+pub const LAUNCHER_REPO: &str = "mirasins/mirai-launcher";
 /// The launcher's own asset stem.
 pub const LAUNCHER_ID: &str = "artcraft-launcher";
 

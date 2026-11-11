@@ -32,17 +32,17 @@ pub fn t(s: &str) -> &str {
 pub fn tr(lang: Lang, s: &str) -> &str {
     #[cfg(test)]
     strict::check(lang);
-    lang.catalog().plain(s).unwrap_or(s)
+    artcraft_launcher_core::brand::rebrand(lang.catalog().plain(s).unwrap_or(s))
 }
 
 /// Like [`tr`], for an English string that needs a disambiguating `context`.
 pub fn tr_ctx<'a>(lang: Lang, context: &str, s: &'a str) -> &'a str {
-    lang.catalog().contextual(context, s).unwrap_or_else(|| tr(lang, s))
+    lang.catalog().contextual(context, s).map_or_else(|| tr(lang, s), artcraft_launcher_core::brand::rebrand)
 }
 
 /// A string keyed by its command id, falling back to the translation of the English `label`.
 pub fn tr_id<'a>(lang: Lang, id: &str, label: &'a str) -> &'a str {
-    lang.catalog().id(id).unwrap_or_else(|| tr(lang, label))
+    lang.catalog().id(id).map_or_else(|| tr(lang, label), artcraft_launcher_core::brand::rebrand)
 }
 
 /// [`tr_id`] in the current language.
@@ -79,7 +79,7 @@ pub fn trn(lang: Lang, n: u64, one: &str, other: &str) -> String {
     let idx = (lang.0.plural)(n);
     let english = if n == 1 { one } else { other };
     let text = lang.catalog().plural(&format!("{one}|{other}"), idx).unwrap_or(english);
-    fmt(text, &[("n", &n.to_string())])
+    artcraft_launcher_core::brand::rebrand_owned(fmt(text, &[("n", &n.to_string())]))
 }
 
 /// [`trn`] in the current language.
@@ -91,7 +91,7 @@ pub fn tn(n: u64, one: &str, other: &str) -> String {
 /// the parts of a message a template's placeholders stand for (names, versions, reasons), stay
 /// as they are.
 pub fn message(lang: Lang, s: &str) -> String {
-    lang.catalog().message(s).unwrap_or_else(|| s.to_string())
+    artcraft_launcher_core::brand::rebrand_owned(lang.catalog().message(s).unwrap_or_else(|| s.to_string()))
 }
 
 /// [`message`] in the current language, remembering the last answer: the status bar asks for the

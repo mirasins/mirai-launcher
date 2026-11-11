@@ -189,7 +189,7 @@ fn native_options(hidden: bool, backends: Option<eframe::wgpu::Backends>) -> efr
     let icon =
         eframe::icon_data::from_png_bytes(include_bytes!("../../../assets/app-icon/hicolor/256x256/apps/ai.storyteller.artcraft-launcher.png")).ok();
     let mut viewport = egui::ViewportBuilder::default()
-        .with_title("ArtCraft Launcher")
+        .with_title(artcraft_launcher_core::brand::APP_NAME)
         .with_app_id(APP_ID)
         .with_inner_size([1120.0, 760.0])
         .with_min_inner_size([720.0, 500.0])
@@ -317,7 +317,7 @@ fn report_startup_failure(backend: Option<eframe::wgpu::Backends>, error: &efram
     let message = startup_failure_message(lang, &backend_label(backend), &error.to_string());
     log::error!("{message}");
     rfd::MessageDialog::new()
-        .set_title("ArtCraft Launcher")
+        .set_title(artcraft_launcher_core::brand::APP_NAME)
         .set_description(message)
         .set_level(rfd::MessageLevel::Error)
         .set_buttons(rfd::MessageButtons::Ok)
@@ -677,7 +677,7 @@ impl Host for DesktopHost {
             #[cfg(target_os = "macos")]
             claim_notification_identity();
             let mut n = notify_rust::Notification::new();
-            n.summary(&title).body(&body).appname("ArtCraft Launcher");
+            n.summary(&title).body(&body).appname(artcraft_launcher_core::brand::APP_NAME);
             #[cfg(windows)]
             n.app_id(APP_ID);
             #[cfg(all(unix, not(target_os = "macos")))]
@@ -1360,16 +1360,16 @@ mod tests {
         // English is the lookup key, so the dialog reads the same before a catalog has the row.
         assert_eq!(
             startup_failure_message(i18n::Lang::EN, "Direct3D 12", error),
-            "ArtCraft Launcher couldn't start its window on Direct3D 12: The parameter is incorrect. (0x80070057)"
+            "Mirai Launcher couldn't start its window on Direct3D 12: The parameter is incorrect. (0x80070057)"
         );
         // A catalog translates the sentence and carries the two placeholders' text over.
         assert_eq!(
             startup_failure_message(i18n::Lang::DE, "Direct3D 12", error),
-            "ArtCraft Launcher konnte sein Fenster auf Direct3D 12 nicht starten: The parameter is incorrect. (0x80070057)"
+            "Mirai Launcher konnte sein Fenster auf Direct3D 12 nicht starten: The parameter is incorrect. (0x80070057)"
         );
         assert_eq!(
             startup_failure_message(i18n::Lang::JA, "OpenGL", error),
-            "ArtCraft Launcher のウィンドウを OpenGL で起動できませんでした: The parameter is incorrect. (0x80070057)"
+            "Mirai Launcher のウィンドウを OpenGL で起動できませんでした: The parameter is incorrect. (0x80070057)"
         );
     }
 
