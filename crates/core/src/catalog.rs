@@ -152,10 +152,11 @@ const fn app(
 
 /// A Mirai fork of a Craft App, published by the fork's owner from its own repository
 /// (`mirasins/mirai-*-fork`) with `X.Y.Z-mirai.N` stable versions. It keeps upstream's ids (asset
-/// stems, bundle id, the MSI's publisher), so an upstream copy is found and updated in place.
+/// stems, bundle id, the MSI's publisher), so an upstream copy is found and updated in place. It is
+/// one of the launcher's own apps, so it stays [`AppKind::Official`]: listed, drawn and never hidden
+/// like the rest of the suite; only its repository and channel differ.
 const fn mirai(base: CraftApp) -> CraftApp {
     CraftApp {
-        kind: AppKind::Community,
         publisher: "Mirai",
         // Its macOS builds carry no signature the launcher can check: on macOS it opens a copy
         // that's there but installs nothing.
@@ -428,6 +429,7 @@ mod tests {
                 assert_eq!(a.name.to_lowercase().replace(' ', "-"), a.id);
             }
             match a.kind {
+                AppKind::Official if a.channel.is_some() => assert_eq!(a.repo.split('/').next(), Some(MIRAI_OWNER), "{}", a.id),
                 AppKind::Official => assert_eq!(a.repo, format!("storytold/{}", a.id)),
                 AppKind::Community => assert!(!a.repo.starts_with("storytold/"), "{} is community", a.id),
             }
@@ -443,7 +445,7 @@ mod tests {
         assert_eq!(sc.bundle_ids().collect::<Vec<_>>(), ["io.tangencylabs.solidcraft", "ai.storyteller.solidcraft", "ai.storyteller.solvecraft"]);
         let gc = CraftApp::by_id("gridcraft").unwrap();
         assert_eq!(gc.bundle_id(), "ai.storyteller.gridcraft");
-        assert_eq!(gc.kind, AppKind::Community);
+        assert_eq!(gc.kind, AppKind::Official);
         assert_eq!(sc.website(), "https://solidcraft.io");
         assert!(sc.installs(crate::PackageKind::Dmg) && sc.installs(crate::PackageKind::Msi) && sc.installs(crate::PackageKind::Flatpak));
         assert_eq!(sc.mac_team, Some("G5QA5U5X2S"));
@@ -547,7 +549,7 @@ mod tests {
         for (id, upstream_name) in [("pdfcraft", "PdfCraft"), ("wordcraft", "WordCraft"), ("deckcraft", "DeckCraft"), ("gridcraft", "GridCraft")] {
             let app = CraftApp::by_id(id).unwrap();
             assert!(app.repo.starts_with(&format!("{MIRAI_OWNER}/mirai-")), "{id}: {}", app.repo);
-            assert_eq!(app.kind, AppKind::Community);
+            assert_eq!(app.kind, AppKind::Official);
             assert_eq!(app.channel, Some("mirai"));
             assert_eq!(app.mac_team, None);
             assert_eq!(app.publisher, "Mirai");
