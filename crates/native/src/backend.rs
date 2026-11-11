@@ -621,9 +621,9 @@ enum Work {
     Uninstall,
 }
 
-fn release_matches_track(release: &Release, track: &VersionTrack, prereleases: bool) -> bool {
+fn release_matches_track(release: &Release, track: &VersionTrack, prereleases: bool, channel: Option<&str>) -> bool {
     match track {
-        VersionTrack::Stable => prereleases || (!release.prerelease && release.version.as_ref().is_some_and(version::is_stable)),
+        VersionTrack::Stable => prereleases || (!release.prerelease && release.version.as_ref().is_some_and(|v| version::is_stable_in(v, channel))),
         VersionTrack::Nightly => artcraft_launcher_core::release::is_nightly(release),
         VersionTrack::Pinned(tag) => &release.tag == tag,
     }
@@ -719,7 +719,7 @@ fn install_plan(
     let platform = platform.ok_or("this system isn't supported")?;
     let release = latest.ok_or("the selected release hasn't been found yet. Check for updates first.")?;
     let track = options.versions.get(app.id).unwrap_or(&VersionTrack::Stable);
-    if !release_matches_track(&release, track, options.prereleases) {
+    if !release_matches_track(&release, track, options.prereleases, app.channel) {
         return Err("the selected version isn't available yet. Check for updates before installing.".into());
     }
     let system = match asking {
@@ -1134,7 +1134,7 @@ fn sweep(
                     let (latest, from, used) = match mirror {
                         Some(_) => mirror_chosen(app, feed, now, track),
                         None if *track != VersionTrack::Stable => {
-                            let answer = source.chosen(&feed_repo(feed, app), track);
+                            let answer = source.chosen(&feed_repo(feed, app), track, app.channel);
                             (Some(answer.latest), Origin::GitHub, Some(answer.source))
                         }
                         None => latest_for(app, feed, fallback, source.as_ref(), shared, options.prereleases, force, now),
@@ -1766,14 +1766,14 @@ mod tests {
     #[test]
     fn an_install_cannot_use_a_stale_release_from_a_different_track() {
         let mut release = Release { tag: "v0.8.0".into(), version: version::parse("v0.8.0"), ..Default::default() };
-        assert!(!release_matches_track(&release, &VersionTrack::Nightly, false));
-        assert!(!release_matches_track(&release, &VersionTrack::Pinned("v0.7.0".into()), false));
-        assert!(release_matches_track(&release, &VersionTrack::Stable, false));
+        assert!(!release_matches_track(&release, &VersionTrack::Nightly, false, None));
+        assert!(!release_matches_track(&release, &VersionTrack::Pinned("v0.7.0".into()), false, None));
+        assert!(release_matches_track(&release, &VersionTrack::Stable, false, None));
         release.tag = "v0.9.0-nightly.20261028".into();
         release.version = version::parse(&release.tag);
         release.prerelease = true;
-        assert!(release_matches_track(&release, &VersionTrack::Nightly, false));
-        assert!(!release_matches_track(&release, &VersionTrack::Stable, false));
+        assert!(release_matches_track(&release, &VersionTrack::Nightly, false, None));
+        assert!(!release_matches_track(&release, &VersionTrack::Stable, false, None));
     }
 
     #[test]

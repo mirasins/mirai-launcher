@@ -159,6 +159,11 @@ impl Feed {
 
     /// What the feed says about `app` at `now`.
     pub fn answer(&self, app: &CraftApp, now: i64) -> FeedAnswer {
+        // Apps with a channel (for example, the Mirai forks) do not use the feed,
+        // as the feed lists upstream releases, not the fork's releases.
+        if app.channel.is_some() {
+            return FeedAnswer::AskGitHub;
+        }
         let Some(entry) = self.apps.get(app.id) else { return FeedAnswer::AskGitHub };
         let Some(fetched_at) = entry.fetched_at else { return FeedAnswer::AskGitHub };
         // A timestamp from the future (clock skew) counts as just now; one too old doesn't count.
@@ -679,5 +684,15 @@ mod tests {
             let feed = sample().replace("\"tag\": \"v0.6.0\"", &format!("\"tag\": \"{odd}\""));
             assert_eq!(Feed::parse(&feed).unwrap().answer(app("photocraft"), NOW), FeedAnswer::AskGitHub, "{odd:?}");
         }
+    }
+
+    #[test]
+    fn mirai_apps_with_channel_ask_github() {
+        use crate::catalog::CraftApp;
+        // pdfcraft now has channel Some("mirai"), so feed returns AskGitHub even if it's listed
+        let feed = Feed::parse(&sample()).unwrap();
+        assert_eq!(feed.answer(CraftApp::by_id("pdfcraft").unwrap(), NOW), FeedAnswer::AskGitHub);
+        // photcraft has no channel, so it uses the feed normally
+        assert!(matches!(feed.answer(CraftApp::by_id("photocraft").unwrap(), NOW), FeedAnswer::Fresh(Some(_))));
     }
 }

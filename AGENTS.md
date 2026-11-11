@@ -116,6 +116,12 @@ settings file must produce an error the user can act on, never a panic.
   owner. The one other exception is a developer's own loopback mirror (`ARTCRAFT_LAUNCHER_DOWNLOAD_BASE`,
   `cargo xtask local`); keep it loopback-only and behind the `local-mirror` cargo feature, which
   release builds never enable.
+- **Mirai fork:** Mirai Reader, Mirai Words, Mirai Presentations and Mirai Calc take the places of
+  PdfCraft, WordCraft, DeckCraft and GridCraft, and install from the fork owner's repos
+  `https://github.com/mirasins/mirai-{reader-pdfcraft,words-wordcraft,presentations-deckcraft,calc-gridcraft}-fork/releases`
+  (approved by the fork's owner on 2026-11-10). They are pinned in the catalog like community apps,
+  with `channel = Some("mirai")`: their stable versions are `X.Y.Z-mirai.N`, and the ArtCraft
+  release feed, which describes upstream's releases, is never asked about them.
 - Verify each download against the release's `SHA256SUMS.txt` before running or installing it.
   Community apps get the same check. On macOS the launcher also requires the Developer ID signature
   of the app's own team (`CraftApp::mac_team`: ArtCraft's for official apps, SolidCraft's for

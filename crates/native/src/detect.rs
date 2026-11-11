@@ -1069,7 +1069,7 @@ mod tests {
         let roots = roots();
         let mut want = vec![location.join("pdfcraft.exe"), location.join("printcraft.exe")];
         for root in &roots {
-            for dir in ["PdfCraft", "PrintCraft"] {
+            for dir in ["Mirai Reader", "PdfCraft", "PrintCraft"] {
                 want.push(root.join(dir).join("pdfcraft.exe"));
                 want.push(root.join(dir).join("printcraft.exe"));
             }

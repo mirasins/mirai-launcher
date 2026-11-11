@@ -103,6 +103,19 @@ pub fn is_stable(v: &Version) -> bool {
     v.pre.is_empty()
 }
 
+/// [`is_stable`] for an app whose stable releases carry a fork's `channel` label: `0.18.2-mirai.1`
+/// is stable in the `mirai` channel (the label, a dot, and a build number), `0.18.2-rc.1` is not.
+pub fn is_stable_in(v: &Version, channel: Option<&str>) -> bool {
+    v.pre.is_empty()
+        || channel.is_some_and(|c| {
+            v.pre
+                .as_str()
+                .strip_prefix(c)
+                .and_then(|rest| rest.strip_prefix('.'))
+                .is_some_and(|n| !n.is_empty() && n.bytes().all(|b| b.is_ascii_digit()))
+        })
+}
+
 /// Orders by precedence, ignoring build metadata.
 pub fn compare(a: &Version, b: &Version) -> Ordering {
     a.cmp_precedence(b)
@@ -181,5 +194,31 @@ mod tests {
         // An MSI that recorded 0.3.0 for 0.3.0-rc.2 is not out of date against 0.3.0-rc.2.
         assert!(!is_update(&v("0.3.0-rc.2"), &v("0.3.0")));
         assert!(is_stable(&v("1.0.0")) && !is_stable(&v("1.0.0-beta.1")));
+    }
+
+    #[test]
+    fn is_stable_in_accepts_mirai_versions() {
+        // With mirai channel: 0.18.2-mirai.1 is stable
+        assert!(is_stable_in(&v("0.18.2-mirai.1"), Some("mirai")));
+        // Without channel or with wrong channel: not stable
+        assert!(!is_stable_in(&v("0.18.2-mirai.1"), None));
+        assert!(!is_stable_in(&v("0.18.2-mirai.1"), Some("other")));
+        // Reject invalid mirai suffixes
+        assert!(!is_stable_in(&v("0.18.2-mirai"), Some("mirai"))); // missing .N
+        assert!(!is_stable_in(&v("0.18.2-mirai.x"), Some("mirai"))); // non-digit
+        assert!(!is_stable_in(&v("0.18.2-rc.1"), Some("mirai"))); // wrong prefix
+        // Stable versions are always stable
+        assert!(is_stable_in(&v("0.18.2"), Some("mirai")));
+        assert!(is_stable_in(&v("0.18.2"), None));
+        // With no channel, only empty pre is stable
+        assert!(!is_stable_in(&v("0.18.2-mirai.1"), None));
+    }
+
+    #[test]
+    fn a_fork_build_of_the_installed_version_is_not_an_update() {
+        // The MSI records 0.18.2 for 0.18.2-mirai.1: the same build, not an older one.
+        assert!(!is_update(&v("0.18.2-mirai.1"), &v("0.18.2")));
+        assert!(is_update(&v("0.18.3-mirai.1"), &v("0.18.2")));
+        assert!(is_newer(&v("0.18.2-mirai.2"), &v("0.18.2-mirai.1")));
     }
 }
