@@ -202,9 +202,11 @@ fn complete_catalogs_translate_every_tagline() {
 #[test]
 fn product_names_stay_in_english() {
     for lang in Lang::all() {
-        for name in ["ArtCraft Launcher", "Craft App Suite", "Launcher"] {
+        for name in ["Craft App Suite", "Launcher"] {
             assert_eq!(tr(lang, name), name, "{}", lang.code());
         }
+        // The fork shows its own name for the launcher in every language.
+        assert_eq!(tr(lang, "ArtCraft Launcher"), artcraft_launcher_core::brand::APP_NAME, "{}", lang.code());
     }
 }
 
