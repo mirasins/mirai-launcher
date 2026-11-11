@@ -3,12 +3,11 @@ Copyright (c) 2026 ArtCraft Team and the ArtCraft Launcher contributors.
 Licensed under the MIT License or the Apache License, Version 2.0, at your option
 (LICENSE-MIT, LICENSE-APACHE).
 
-The ArtCraft name, wordmark, logo and "A" mark (docs/brand/) are trademarks of the ArtCraft Team.
-They are NOT open source and are NOT covered by the MIT or Apache-2.0 license above. This includes
-everywhere ArtCraft Launcher shows them: the app icon (assets/app-icon/, the blue "A" mark), the
-ArtCraft logo in the window header and the "A" mark used as the tray / menu-bar icon
-(docs/brand/artcraft-mark-64.png, artcraft-mark-black-44.png).
-Their terms are in docs/brand/LICENSE-brand.txt; forks and modified versions must remove them.
+Mirai Launcher is the Mirai fork of ArtCraft Launcher. The ArtCraft name, wordmark, logo and "A"
+mark are trademarks of the ArtCraft Team, NOT open source and NOT covered by the license above
+(docs/brand/LICENSE-brand.txt); forks must remove them. This fork's app icon, header mark and tray
+icon are its own Mirai Launcher icon (assets/app-icon/, MIT OR Apache-2.0), and the four Mirai
+apps' icons in assets/app-icons/ are the fork's own as well.
 
 Third-party material
 

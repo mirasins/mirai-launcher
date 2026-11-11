@@ -1,14 +1,5 @@
 <p align="center">
-  <a href="https://getartcraft.com/">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="docs/brand/artcraft-logo-white.svg">
-      <img alt="ArtCraft" src="docs/brand/artcraft-logo.svg" width="200">
-    </picture>
-  </a>
-</p>
-
-<p align="center">
-  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.artcraft-launcher.png" width="128" height="128" alt="ArtCraft Launcher icon: a blue stylised letter A">
+  <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.artcraft-launcher.png" width="128" height="128" alt="Mirai Launcher icon: a pink-to-violet orb with the word Mirai">
 </p>
 
 <h1 align="center">ArtCraft Launcher</h1>
@@ -341,14 +332,11 @@ with its author, source and license in [ATTRIBUTION.md](ATTRIBUTION.md).
 The app icons of the Craft apps (`assets/app-icons/`) are each app's own icon, copied unmodified
 from its repository and licensed like that app (MIT OR Apache-2.0).
 
-**The ArtCraft name, logo and "A" mark are not licensed under MIT or Apache-2.0.** They (everything
-in [`docs/brand/`](docs/brand/), plus the app icon in [`assets/app-icon/`](assets/app-icon/), the
-logo in the launcher's header and the "A" tray icon)
-are trademarks of the ArtCraft Team and are not covered by this license. They may be used only unmodified, and only as
-part of this repository and ArtCraft Launcher, under [`docs/brand/LICENSE-brand.txt`](docs/brand/LICENSE-brand.txt).
-Forks and modified versions must remove them.
+**The ArtCraft name, logo and "A" mark are not licensed under MIT or Apache-2.0**: they are
+trademarks of the ArtCraft Team ([`docs/brand/LICENSE-brand.txt`](docs/brand/LICENSE-brand.txt)), and
+forks must remove them. This fork, Mirai Launcher, shows its own Mirai icon instead
+([`assets/app-icon/`](assets/app-icon/), MIT OR Apache-2.0).
 
 <p align="center">
-  <a href="https://getartcraft.com/"><img alt="ArtCraft" src="docs/brand/artcraft-mark.svg" width="28"></a><br>
   <sub>Made by the <a href="https://getartcraft.com/">ArtCraft</a> team and community.</sub>
 </p>

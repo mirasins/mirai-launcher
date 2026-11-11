@@ -52,7 +52,7 @@ impl LauncherUi {
         ui.set_max_height(size.y);
         let hero_h = sheet::hero(
             ui,
-            Some(crate::icons::artcraft_mark()),
+            Some(crate::icons::app_mark()),
             tl!("Settings"),
             &format!("{} {}", artcraft_launcher_core::brand::APP_NAME, env!("CARGO_PKG_VERSION")),
             |_| {},
