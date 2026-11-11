@@ -1360,16 +1360,16 @@ mod tests {
         // English is the lookup key, so the dialog reads the same before a catalog has the row.
         assert_eq!(
             startup_failure_message(i18n::Lang::EN, "Direct3D 12", error),
-            "ArtCraft Launcher couldn't start its window on Direct3D 12: The parameter is incorrect. (0x80070057)"
+            "Mirai Launcher couldn't start its window on Direct3D 12: The parameter is incorrect. (0x80070057)"
         );
         // A catalog translates the sentence and carries the two placeholders' text over.
         assert_eq!(
             startup_failure_message(i18n::Lang::DE, "Direct3D 12", error),
-            "ArtCraft Launcher konnte sein Fenster auf Direct3D 12 nicht starten: The parameter is incorrect. (0x80070057)"
+            "Mirai Launcher konnte sein Fenster auf Direct3D 12 nicht starten: The parameter is incorrect. (0x80070057)"
         );
         assert_eq!(
             startup_failure_message(i18n::Lang::JA, "OpenGL", error),
-            "ArtCraft Launcher のウィンドウを OpenGL で起動できませんでした: The parameter is incorrect. (0x80070057)"
+            "Mirai Launcher のウィンドウを OpenGL で起動できませんでした: The parameter is incorrect. (0x80070057)"
         );
     }
 
