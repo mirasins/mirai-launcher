@@ -1204,71 +1204,60 @@ html:has(body[data-motion="off"]) {
   }
 }
 
-/* Original decorative trails: keep navigation and text above the drawing. */
-#descargas {
-  position:relative;
-  isolation:isolate
-}
-.idea-trails {
-  position:absolute;
+
+/* Background wind is isolated beneath all page content and never receives input. */
+body { isolation:isolate }
+.wrap { position:relative; z-index:1 }
+.architecture { z-index:-2 }
+.wind-background {
+  position:fixed;
+  inset:0;
   z-index:-1;
-  top:-76px;
-  left:13%;
-  width:74%;
-  height:230px;
+  overflow:hidden;
   pointer-events:none;
-  user-select:none;
-  overflow:hidden
+  user-select:none
 }
-.idea-trails svg {
+.wind-background svg {
   display:block;
   width:100%;
-  height:100%;
-  overflow:visible
+  height:100%
 }
-.idea-trail {
-  stroke:url(#idea-trail-gradient);
-  stroke-width:3;
+.wind-line,.wind-gust {
+  stroke:url(#wind-color);
+  stroke-width:1.6;
   stroke-linecap:round;
   stroke-linejoin:round;
   vector-effect:non-scaling-stroke;
-  opacity:.5
+  fill:none
 }
-@keyframes idea-trail-draw {
+.wind-line { opacity:.13 }
+.wind-gust {
+  opacity:0;
+  stroke-width:2.2;
+  stroke-dasharray:.22 .78;
+  stroke-dashoffset:1
+}
+@keyframes wind-pass {
   0% { stroke-dashoffset:1; opacity:0 }
-  8% { opacity:.65 }
-  42%,64% { stroke-dashoffset:0; opacity:.65 }
-  86%,100% { stroke-dashoffset:-1; opacity:0 }
+  12%,78% { opacity:.35 }
+  100% { stroke-dashoffset:-1; opacity:0 }
+}
+@keyframes wind-drift {
+  from { transform:translate(-18px,12px) }
+  to { transform:translate(22px,-14px) }
 }
 @media(prefers-reduced-motion:no-preference) {
-  body[data-motion="on"] .idea-trail {
-    stroke-dasharray:1 1;
-    animation:idea-trail-draw 10s cubic-bezier(.45,0,.25,1) infinite
+  body[data-motion="on"] .wind-gust {
+    animation:wind-pass var(--wind-duration,26s) linear infinite;
+    animation-delay:var(--wind-delay,0s)
   }
-  body[data-motion="on"] .trail-two { animation-delay:-6.7s }
-  body[data-motion="on"] .trail-three { animation-delay:-3.4s }
-}
-/* Pausing or reducing motion leaves a quiet, complete drawing. */
-body[data-motion="off"] .idea-trail {
-  stroke-dasharray:none;
-  stroke-dashoffset:0;
-  opacity:.3
-}
-@media(max-width:800px) {
-  .idea-trails {
-    left:20%;
-    width:78%;
-    top:-42px;
-    height:160px
+  body[data-motion="on"] .wind-flow {
+    animation:wind-drift 18s ease-in-out infinite alternate
   }
 }
+body[data-motion="off"] .wind-gust { opacity:0 }
 @media(max-width:580px) {
-  .idea-trails {
-    left:30%;
-    width:68%;
-    top:-24px;
-    height:104px
-  }
-  .idea-trail { stroke-width:2; opacity:.3 }
-  .trail-one { display:none }
+  .wind-background svg { width:170%; margin-left:-35% }
+  .wind-line { opacity:.1 }
+  .wind-gust { stroke-width:1.6 }
 }
