@@ -61,3 +61,11 @@ licensed like those apps. Refresh them from the source path, never redraw them.
 |---|---|---|---|---|
 | `docs/brand/LICENSE-brand.txt`, `artcraft-mark-black.svg` | The ArtCraft brand terms (which the Craft apps' icons in `assets/app-icons/` refer to) and the black mark the macOS DMG background still links | ArtCraft Team | getartcraft.com | Not open source; trademarks of the ArtCraft Team, [`docs/brand/LICENSE-brand.txt`](docs/brand/LICENSE-brand.txt) |
 | README app icons (linked, not copied) | Each Craft app's 64 px icon | ArtCraft Team and each app's contributors | `raw.githubusercontent.com/storytold/<app>/main/assets/app-icon/hicolor/64x64/apps/ai.storyteller.<app>.png` | MIT OR Apache-2.0 (each app's license) |
+
+## Hosted catalog verification
+
+| Path                                                 | Title                                     | Author        | Source                                               | License           |
+| ---------------------------------------------------- | ----------------------------------------- | ------------- | ---------------------------------------------------- | ----------------- |
+| `crates/core/assets/launcher-catalog-public-key.pem` | Launcher catalog Ed25519 verification key | ArtCraft Team | Maintainer-supplied website catalog signing keypair  | MIT OR Apache-2.0 |
+| `crates/core/catalog.toml`                           | Bundled launcher catalog                  | ArtCraft Team | `storytold/artcraft-services` PR #205                | MIT OR Apache-2.0 |
+| `crates/core/tests/fixtures/hosted-catalog.toml.sig` | Detached catalog signature test fixture   | ArtCraft Team | Signature of the bundled catalog with its pinned key | MIT OR Apache-2.0 |
