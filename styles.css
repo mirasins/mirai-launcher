@@ -1203,3 +1203,72 @@ html:has(body[data-motion="off"]) {
     transform:none!important
   }
 }
+
+/* Original decorative trails: keep navigation and text above the drawing. */
+#descargas {
+  position:relative;
+  isolation:isolate
+}
+.idea-trails {
+  position:absolute;
+  z-index:-1;
+  top:-76px;
+  left:13%;
+  width:74%;
+  height:230px;
+  pointer-events:none;
+  user-select:none;
+  overflow:hidden
+}
+.idea-trails svg {
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:visible
+}
+.idea-trail {
+  stroke:url(#idea-trail-gradient);
+  stroke-width:3;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  vector-effect:non-scaling-stroke;
+  opacity:.5
+}
+@keyframes idea-trail-draw {
+  0% { stroke-dashoffset:1; opacity:0 }
+  8% { opacity:.65 }
+  42%,64% { stroke-dashoffset:0; opacity:.65 }
+  86%,100% { stroke-dashoffset:-1; opacity:0 }
+}
+@media(prefers-reduced-motion:no-preference) {
+  body[data-motion="on"] .idea-trail {
+    stroke-dasharray:1 1;
+    animation:idea-trail-draw 10s cubic-bezier(.45,0,.25,1) infinite
+  }
+  body[data-motion="on"] .trail-two { animation-delay:-6.7s }
+  body[data-motion="on"] .trail-three { animation-delay:-3.4s }
+}
+/* Pausing or reducing motion leaves a quiet, complete drawing. */
+body[data-motion="off"] .idea-trail {
+  stroke-dasharray:none;
+  stroke-dashoffset:0;
+  opacity:.3
+}
+@media(max-width:800px) {
+  .idea-trails {
+    left:20%;
+    width:78%;
+    top:-42px;
+    height:160px
+  }
+}
+@media(max-width:580px) {
+  .idea-trails {
+    left:30%;
+    width:68%;
+    top:-24px;
+    height:104px
+  }
+  .idea-trail { stroke-width:2; opacity:.3 }
+  .trail-one { display:none }
+}
