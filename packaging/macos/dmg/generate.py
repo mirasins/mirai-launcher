@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Regenerate background.tiff and dmg-layout.DS_Store for the macOS DMG window (see README.md here).
 
-Needs resvg on PATH and:
+Needs:
     pip install 'pillow>=12' ds_store==1.3.3 mac_alias==2.2.3
 
 Runs on any OS, no Mac needed. Both outputs come from this script alone, so they carry nothing
@@ -12,14 +12,11 @@ from the machine that made them: no local paths, user or disk names, dates or vo
 
 import datetime
 import os
-import shutil
-import subprocess
 import sys
-import tempfile
 
 from ds_store import DSStore
 from mac_alias import Alias, TargetInfo, VolumeInfo
-from PIL import Image, ImageCms
+from PIL import Image, ImageCms, ImageDraw
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 
@@ -28,22 +25,32 @@ VOLUME = "ArtCraft Launcher"
 WIDTH, HEIGHT = 660, 400  # window content, pt; the background's 1x size
 TITLE_BAR = 32
 ICON_SIZE = 128
-PALETTE = 16  # colours in background.tiff
+PALETTE = 256  # colours in background.tiff
 ICONS = {"ArtCraft Launcher.app": (326, 205), "Applications": (574, 205)}
 # A fixed date for the alias and the colour profile. Finder never matches it against the image
 # (each build is a new volume): it finds the background by volume name and path.
 FIXED_DATE = datetime.datetime(2026, 10, 11, tzinfo=datetime.timezone.utc)
 
 
-def render(svg, width, out):
-    # The SVG's text is already outlined and no fonts are loaded, so every machine draws the
-    # same pixels.
-    subprocess.run(
-        ["resvg", "--skip-system-fonts", "-w", str(width), svg, out],
-        check=True,
-    )
-    with Image.open(out) as im:
-        return im.convert("RGB")
+def render(width):
+    # Original Mirai artwork, kept clear of Finder's app and Applications icons.
+    scale = width // WIDTH
+    im = Image.new("RGB", (width, HEIGHT * scale), "#efe9dc")
+    d = ImageDraw.Draw(im)
+    def box(coords):
+        return tuple(round(v * scale) for v in coords)
+    d.rectangle(box((0, 0, 231, 399)), fill="#4e7bfb")
+    icon_path = os.path.join(HERE, "../../../assets/app-icon/artcraft-launcher-1024.png")
+    with Image.open(icon_path) as icon:
+        icon = icon.convert("RGBA").resize((170 * scale, 170 * scale), Image.Resampling.LANCZOS)
+        im.paste(icon, (31 * scale, 115 * scale), icon)
+    for x in (232, 236):
+        d.line(box((x, 0, x, 399)), fill="#0b0b0c", width=scale)
+    for y in (88, 335):
+        d.line(box((267, y, 624, y)), fill="#0b0b0c", width=scale)
+    d.line(box((410, 205, 484, 205)), fill="#0b0b0c", width=2 * scale)
+    d.polygon([box((484, 199)), box((495, 205)), box((484, 210))], fill="#0b0b0c")
+    return im
 
 
 def quantize(im):
@@ -61,14 +68,11 @@ def srgb_profile():
     return bytes(icc)
 
 
-def write_tiff(svg, out):
+def write_tiff(out):
     """1x (72 dpi) and 2x (144 dpi) in one TIFF, as `tiffutil -cathidpicheck` writes them."""
-    with tempfile.TemporaryDirectory() as tmp:
-        one, two = (
-            quantize(render(svg, WIDTH * s, os.path.join(tmp, f"{s}x.png"))) for s in (1, 2)
-        )
+    one, two = (quantize(render(WIDTH * scale)) for scale in (1, 2))
     two.encoderinfo = {"dpi": (144, 144)}  # the rest as the first page
-    # Opaque 16-colour palette, Deflate: the artwork is three inks plus antialiasing, and a palette
+    # Opaque palette, Deflate: a palette
     # keeps the file under ~100 KB (repository assets must stay small). As PhotoCraft's.
     one.save(
         out,
@@ -148,9 +152,7 @@ def write_ds_store(out):
 
 
 def main():
-    if not shutil.which("resvg"):
-        sys.exit("error: resvg not found (brew install resvg / cargo install resvg --locked)")
-    write_tiff(os.path.join(HERE, "background.svg"), os.path.join(HERE, "background.tiff"))
+    write_tiff(os.path.join(HERE, "background.tiff"))
     write_ds_store(os.path.join(HERE, "dmg-layout.DS_Store"))
 
 
