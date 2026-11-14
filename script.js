@@ -47,4 +47,21 @@
   toggle?.addEventListener('click', () => { paused = !paused; sync(); });
   if (preference.addEventListener) preference.addEventListener('change', sync);
   sync();
+
+  const carousel = document.querySelector('.index-strip');
+  if (carousel) {
+    let moving = false;
+    window.setInterval(() => {
+      if (moving || paused || preference.matches || carousel.matches(':hover, :focus-within')) return;
+      const last = carousel.lastElementChild;
+      if (!last) return;
+      moving = true;
+      carousel.classList.add('is-sliding');
+      window.setTimeout(() => {
+        carousel.classList.remove('is-sliding');
+        carousel.prepend(last);
+        moving = false;
+      }, 650);
+    }, 4500);
+  }
 })();
