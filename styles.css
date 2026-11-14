@@ -1249,31 +1249,6 @@ html:has(body[data-motion="off"]) {
 
 
 
-/* The apps travel around Mirai; offset-rotate keeps every icon upright. */
-@supports(offset-path:ellipse(34% 36% at 50% 50%)) {
-  .constellation .satellite {
-    inset:0 auto auto 0;
-    offset-path:ellipse(34% 36% at 50% 50%);
-    offset-rotate:0deg;
-    offset-anchor:50% 50%;
-    offset-distance:var(--orbit-start);
-    transform:none
-  }
-  .s1 { --orbit-start:12.5% }
-  .s2 { --orbit-start:37.5% }
-  .s3 { --orbit-start:62.5% }
-  .s4 { --orbit-start:87.5% }
-  @keyframes mirai-carousel {
-    from { offset-distance:var(--orbit-start) }
-    to { offset-distance:calc(var(--orbit-start) + 100%) }
-  }
-  @media(prefers-reduced-motion:no-preference) {
-    body[data-motion="on"] .constellation .satellite {
-      animation:mirai-carousel 24s linear infinite
-    }
-  }
-}
-
 /* Background wind is isolated beneath all page content and never receives input. */
 body { isolation:isolate }
 .wrap { position:relative; z-index:1 }
@@ -1330,3 +1305,10 @@ body[data-motion="off"] .wind-gust { opacity:0 }
   .wind-line { opacity:.1 }
   .wind-gust { stroke-width:1.6 }
 }
+
+/* The application links move together; their icons stay upright. */
+.index-strip { display:flex; flex-wrap:nowrap; gap:0; overflow:hidden }
+.index-strip>a { flex:0 0 25%; min-width:0 }
+.index-strip.is-sliding>a { transition:transform .65s ease; transform:translateX(100%) }
+@media(max-width:800px) { .index-strip>a { flex-basis:50% } }
+@media(max-width:420px) { .index-strip>a { flex-basis:100% } }
