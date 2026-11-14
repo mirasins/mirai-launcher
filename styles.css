@@ -1248,59 +1248,28 @@ html:has(body[data-motion="off"]) {
 }
 
 
-/* Background wind is isolated beneath all page content and never receives input. */
-body { isolation:isolate }
-.wrap { position:relative; z-index:1 }
-.architecture { z-index:-2 }
-.wind-background {
-  position:fixed;
-  inset:0;
-  z-index:-1;
-  overflow:hidden;
-  pointer-events:none;
-  user-select:none
-}
-.wind-background svg {
-  display:block;
-  width:100%;
-  height:100%
-}
-.wind-line,.wind-gust {
-  stroke:url(#wind-color);
-  stroke-width:1.6;
-  stroke-linecap:round;
-  stroke-linejoin:round;
-  vector-effect:non-scaling-stroke;
-  fill:none
-}
-.wind-line { opacity:.13 }
-.wind-gust {
-  opacity:0;
-  stroke-width:2.2;
-  stroke-dasharray:.22 .78;
-  stroke-dashoffset:1
-}
-@keyframes wind-pass {
-  0% { stroke-dashoffset:1; opacity:0 }
-  12%,78% { opacity:.35 }
-  100% { stroke-dashoffset:-1; opacity:0 }
-}
-@keyframes wind-drift {
-  from { transform:translate(-18px,12px) }
-  to { transform:translate(22px,-14px) }
-}
-@media(prefers-reduced-motion:no-preference) {
-  body[data-motion="on"] .wind-gust {
-    animation:wind-pass var(--wind-duration,26s) linear infinite;
-    animation-delay:var(--wind-delay,0s)
+
+/* The apps travel around Mirai; offset-rotate keeps every icon upright. */
+@supports(offset-path:ellipse(34% 36% at 50% 50%)) {
+  .constellation .satellite {
+    inset:0 auto auto 0;
+    offset-path:ellipse(34% 36% at 50% 50%);
+    offset-rotate:0deg;
+    offset-anchor:50% 50%;
+    offset-distance:var(--orbit-start);
+    transform:none
   }
-  body[data-motion="on"] .wind-flow {
-    animation:wind-drift 18s ease-in-out infinite alternate
+  .s1 { --orbit-start:12.5% }
+  .s2 { --orbit-start:37.5% }
+  .s3 { --orbit-start:62.5% }
+  .s4 { --orbit-start:87.5% }
+  @keyframes mirai-carousel {
+    from { offset-distance:var(--orbit-start) }
+    to { offset-distance:calc(var(--orbit-start) + 100%) }
   }
-}
-body[data-motion="off"] .wind-gust { opacity:0 }
-@media(max-width:580px) {
-  .wind-background svg { width:170%; margin-left:-35% }
-  .wind-line { opacity:.1 }
-  .wind-gust { stroke-width:1.6 }
+  @media(prefers-reduced-motion:no-preference) {
+    body[data-motion="on"] .constellation .satellite {
+      animation:mirai-carousel 24s linear infinite
+    }
+  }
 }
