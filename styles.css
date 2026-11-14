@@ -386,6 +386,49 @@ h1 span {
   font-size:10px;
   letter-spacing:1.5px
 }
+.index-strip>a {
+  flex:1;
+  min-width:0;
+  gap:12px;
+  padding:10px 12px;
+  border-left:1px solid var(--line);
+  transition:background .25s ease
+}
+.index-strip>a:hover,.index-strip>a:focus-visible {
+  background:var(--panel)
+}
+.index-strip>a img {
+  width:46px;
+  height:46px;
+  flex:none;
+  object-fit:contain
+}
+.index-strip>a .index-name {
+  color:var(--ink)
+}
+.index-strip>a .index-arrow {
+  margin-left:auto;
+  color:var(--accent)
+}
+@media(prefers-reduced-motion:no-preference) {
+  .index-strip>a img {
+    animation:index-icon-turn 12s linear infinite
+  }
+  .index-strip>a:nth-of-type(even) img {
+    animation-direction:reverse
+  }
+  body[data-motion="off"] .index-strip>a img {
+    animation:none
+  }
+}
+@keyframes index-icon-turn {
+  to { transform:rotate(360deg) }
+}
+@media(max-width:800px) {
+  .index-strip>a {
+    flex:1 1 calc(50% - 26px)
+  }
+}
 .section-head {
   display:flex;
   justify-content:space-between;
