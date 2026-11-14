@@ -108,20 +108,20 @@ main:focus {
   font:10px/1.4 ui-monospace,Consolas,monospace;
   letter-spacing:1.5px
 }
-nav {
+.site-header nav {
   display:flex;
   align-items:center;
   gap:24px;
   font-size:14px
 }
-nav a {
+.site-header nav a {
   display:inline-flex;
   align-items:center;
   min-height:44px;
   text-decoration:none;
   position:relative
 }
-nav a::after {
+.site-header nav a::after {
   content:'';
   position:absolute;
   bottom:6px;
@@ -131,7 +131,7 @@ nav a::after {
   background:var(--accent);
   transition:width .2s
 }
-nav a:hover::after {
+.site-header nav a:hover::after {
   width:100%
 }
 .nav-github {
@@ -1028,7 +1028,7 @@ html:has(body[data-motion="off"]) {
     width:34px;
     height:34px
   }
-  nav {
+  .site-header nav {
     gap:18px;
     font-size:13px;
     width:100%;
