@@ -14,7 +14,7 @@ El contenido y todos los enlaces están en HTML. script.js solo añade entradas 
 
 Consultar las releases públicas de los cinco repositorios. Usar browser_download_url de cada asset; no reconstruir URLs ni inferir paquetes desde una etiqueta. Actualizar versiones por plataforma y fecha de revisión. Excluir borradores; una etiqueta Latest no demuestra disponibilidad para todos los sistemas.
 
-Catálogo consultado el 13 de noviembre de 2026: Words v0.15.2-mirai.1, Presentations v0.15.1-mirai.1, Calc v0.16.1-mirai.1, con MSI/ZIP Windows x64 y RPM Fedora x86_64. Reader y Launcher sin releases públicas. Las notas de los paquetes Windows indican ausencia de firma, identidad MSI compartida con upstream y pruebas completas de instalación no realizadas; la página lo comunica antes de descargar.
+Catálogo consultado el 15 de noviembre de 2026: Words v0.18.1-mirai.2, Calc v0.19.1-mirai.1, Presentations v0.19.0-mirai.1, Reader v0.21.1-mirai.1 y Launcher v0.19.3 ofrecen paquetes Windows x64 y ARM64, Linux y web. Las releases actuales de Windows usan certificados autofirmados; los paquetes Linux no están firmados. También se enlazan Presentations v0.15.1 y Launcher v0.19.2, sin firma. Consultar las notas de cada release antes de instalar.
 
 ## Recursos
 
