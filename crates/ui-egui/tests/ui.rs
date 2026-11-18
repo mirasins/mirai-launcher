@@ -233,7 +233,7 @@ fn harness_with(
     manage: bool,
     scale: f32,
 ) -> (Harness<'static, Option<LauncherUi>>, Rc<RefCell<Vec<Command>>>) {
-    harness_full(events, view, theme, manage, scale, artcraft_launcher_ui_egui::TitleBar::Native, Rc::default(), None, None)
+    harness_full(events, view, theme, manage, scale, artcraft_launcher_ui_egui::TitleBar::Native, Rc::default(), None)
 }
 
 /// Like `harness_with`, with the details pictures answered as `pictures` says (changeable during the test).
@@ -245,7 +245,7 @@ fn harness_pictures(
     scale: f32,
     pictures: Rc<Cell<Pictures>>,
 ) -> (Harness<'static, Option<LauncherUi>>, Rc<RefCell<Vec<Command>>>) {
-    harness_full(events, view, theme, manage, scale, artcraft_launcher_ui_egui::TitleBar::Native, pictures, None, None)
+    harness_full(events, view, theme, manage, scale, artcraft_launcher_ui_egui::TitleBar::Native, pictures, None)
 }
 
 fn harness_with_title_bar(
@@ -256,27 +256,12 @@ fn harness_with_title_bar(
     scale: f32,
     bar: artcraft_launcher_ui_egui::TitleBar,
 ) -> (Harness<'static, Option<LauncherUi>>, Rc<RefCell<Vec<Command>>>) {
-    harness_full(events, view, theme, manage, scale, bar, Rc::default(), None, None)
-}
-
-fn harness_with_discord(discord_url: Option<&'static str>) -> (Harness<'static, Option<LauncherUi>>, Rc<RefCell<Vec<Command>>>) {
-    harness_full(
-        events(),
-        ViewMode::Grid,
-        egui::Theme::Dark,
-        true,
-        1.0,
-        artcraft_launcher_ui_egui::TitleBar::Native,
-        Rc::default(),
-        None,
-        discord_url,
-    )
+    harness_full(events, view, theme, manage, scale, bar, Rc::default(), None)
 }
 
 #[allow(clippy::too_many_arguments)] // Test fixture inputs vary independently across existing cases.
 /// Builds a harness with the full fixture matrix (events, view, theme, manage mode, scale, title
-/// bar, pictures, platform and Discord URL), forces English labels, and returns the recorded
-/// commands.
+/// bar, pictures and platform), forces English labels, and returns the recorded commands.
 fn harness_full(
     events: Vec<Event>,
     view: ViewMode,
@@ -286,15 +271,11 @@ fn harness_full(
     bar: artcraft_launcher_ui_egui::TitleBar,
     pictures: Rc<Cell<Pictures>>,
     platform: Option<Platform>,
-    discord_url: Option<&'static str>,
 ) -> (Harness<'static, Option<LauncherUi>>, Rc<RefCell<Vec<Command>>>) {
-    struct HeaderHost(artcraft_launcher_ui_egui::TitleBar, Option<&'static str>);
+    struct HeaderHost(artcraft_launcher_ui_egui::TitleBar);
     impl Host for HeaderHost {
         fn title_bar(&self) -> artcraft_launcher_ui_egui::TitleBar {
             self.0
-        }
-        fn discord_url(&self) -> &'static str {
-            self.1.unwrap_or(artcraft_launcher_core::catalog::DISCORD_URL)
         }
     }
     // Integration tests compile without cfg!(test), so system_lang() picks up the
@@ -324,8 +305,8 @@ fn harness_full(
                 *state = Some(LauncherUi::new(ui.ctx(), b, s));
             }
             if let Some(l) = state.as_mut() {
-                l.logic(&ui.ctx().clone(), &mut HeaderHost(bar, discord_url));
-                l.ui(ui, &mut HeaderHost(bar, discord_url));
+                l.logic(&ui.ctx().clone(), &mut HeaderHost(bar));
+                l.ui(ui, &mut HeaderHost(bar));
             }
         },
         None,
@@ -520,6 +501,9 @@ impl Default for Machine {
 /// The suite on `machine` with `latest` as PhotoCraft's checked release (if any) and `answer` as
 /// every version list.
 fn versions_harness(machine: Machine, latest: Option<Release>, answer: Vec<Release>) -> VersionsHarness {
+    // The suite asserts English labels; fix the language before the harness can probe the
+    // developer's locale (a probe racing the parallel tests poisons the shared language).
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     struct DummyHost;
     impl Host for DummyHost {}
     let Machine { platform, theme, preferred, more, launcher_kind } = machine;
@@ -1142,7 +1126,6 @@ fn windows_package_choice_can_select_portable_and_configures_the_backend() {
         artcraft_launcher_ui_egui::TitleBar::Native,
         Rc::default(),
         Some(Platform { os: Os::Windows, arch: Arch::X64 }),
-        None,
     );
     h.run_steps(8);
     h.get_by_label("Settings").click();
@@ -1173,7 +1156,6 @@ fn a_narrow_settings_row_keeps_its_control_clear_of_its_label() {
         artcraft_launcher_ui_egui::TitleBar::Native,
         Rc::default(),
         Some(Platform { os: Os::Windows, arch: Arch::X64 }),
-        None,
     );
     h.set_size(egui::vec2(1000.0, 700.0));
     h.run_steps(6);
@@ -1706,6 +1688,7 @@ fn install_locations_survive_settings_save_and_older_settings_use_system_default
 /// Logic without a window still consumes backend events; attaching to a new window then draws
 /// the update cards.
 fn keeps_working_with_no_window_then_draws_in_a_new_one() {
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     let sent = Rc::new(RefCell::new(Vec::new()));
     let backend = Fake {
         events: events(),
@@ -1760,8 +1743,8 @@ fn grid_shows_every_status_and_installs_on_click() {
     assert!(updated.iter().all(|l| l.starts_with("Last updated: Oct ") && l.ends_with(", 2026")), "{updated:?}");
     // The window has no title bar of its own here (the web build, and the tests).
     assert!(h.query_by_label("Close").is_none());
-    assert!(h.query_all_by_label_contains("Discord").count() >= 1); // the footer icon (the header has none)
-    assert!(h.query_by_label("Join the ArtCraft community on Discord").is_none(), "no Discord link in the header");
+    assert!(h.query_all_by_label("Upstream project").count() >= 1); // the footer's credit link
+    assert_eq!(h.query_all_by_label_contains("Discord").count(), 0, "no ArtCraft community invite anywhere");
     assert!(h.query_all_by_label("Coming soon").count() >= 1);
     h.get_by_label_contains("48 MB of 131 MB");
     h.get_by_label("Update all (2)").click();
@@ -2440,9 +2423,9 @@ fn community_visibility_preference_round_trips_and_defaults_off_for_old_settings
 }
 
 #[test]
-/// The Settings dialog announces its heading once and shows the community section's Discord
-/// entry alongside the footer's.
-fn settings_link_to_discord() {
+/// The Settings dialog announces its heading once and shows the Mirai community's links, with
+/// the fork's credit to the upstream project spelled out under them.
+fn settings_link_to_the_mirai_community_and_credit_the_upstream_project() {
     let (mut h, _) = harness(ViewMode::Grid, egui::Theme::Dark, true);
     h.run_steps(6);
     h.get_by_label("Settings").click();
@@ -2454,9 +2437,18 @@ fn settings_link_to_discord() {
         "the Settings hero icon must not repeat its heading"
     );
     snapshot(&mut h, "settings-dark");
-    h.get_by_label("Questions, ideas and news from the ArtCraft team");
-    // The footer icon and the button in Settings.
-    assert!(h.query_all_by_label_contains("Discord").count() >= 2);
+    h.get_by_label("Questions, ideas and news from the Mirai community");
+    // The community buttons in Settings, one click away from the owner's GitHub.
+    assert!(h.query_all_by_label("Join the Mirai community").count() >= 1);
+    assert!(h.query_all_by_label("Report an issue").count() >= 1);
+    // The credit keeps the original project's name, never the fork's.
+    let note = artcraft_launcher_ui_egui::i18n::fmt(
+        "Mirai Launcher is an independent fork of {upstream} by Storytold and is not affiliated with ArtCraft.",
+        &[("upstream", artcraft_launcher_core::brand::UPSTREAM_NAME)],
+    );
+    assert_eq!(h.query_all_by_label(&note).count(), 1, "the credit line must name the upstream project as written");
+    // The footer icon and the button in Settings both credit the same project.
+    assert!(h.query_all_by_label("Upstream project").count() >= 2);
 }
 
 #[test]
@@ -2490,28 +2482,29 @@ fn the_uninstall_prompt_keeps_its_own_size_after_a_taller_dialog() {
 }
 
 #[test]
-/// The footer links website and GitHub, cards link only GitHub, and the table menu adds the
-/// app's website and repository.
+/// The footer links the Mirai community and the upstream project, cards link only GitHub, and
+/// the table menu adds the app's website and repository.
 fn links_to_the_website_github_and_each_apps_pages() {
     let (mut h, _) = harness(ViewMode::Grid, egui::Theme::Dark, true);
     h.run_steps(6);
-    // Footer: website, GitHub and Discord.
-    for label in ["Website", "GitHub", "Discord"] {
+    // Footer: the Mirai community on GitHub and the upstream project's page.
+    for label in ["GitHub", "Upstream project"] {
         assert!(h.query_all_by_label(label).count() >= 1, "{label}");
     }
-    // Cards: every app links to its repo and to its own page on getartcraft.com (plus the footer's).
+    // Cards: every app links to its repo (plus the footer's).
     let shown_cards = h.query_all_by_label("GitHub").count() - 1;
-    let shown_sites = h.query_all_by_label("Website").count() - 1;
     assert!(shown_cards >= 13, "{shown_cards}");
-    assert_eq!(shown_sites, 0, "the cards only link to GitHub; the website is the footer's icon");
+    // No footer "Website" icon anymore: every Website label belongs to an app's own page.
+    let shown_sites = h.query_all_by_label("Website").count();
+    assert_eq!(shown_sites, 0, "the cards only link to GitHub; there is no footer website icon");
     // The table's … menu has the app's website and GitHub repo.
     let (mut h, _) = harness(ViewMode::Table, egui::Theme::Dark, true);
     h.run_steps(6);
     h.get_all_by_label_contains("More actions").nth(8).unwrap().click(); // Mirai Words
     h.run_steps(3);
     h.get_by_label("GitHub repository");
-    // The footer's Website link and Mirai Words' now-live one in the menu.
-    assert!(h.query_all_by_label_contains("Website").count() >= 2);
+    // Mirai Words' now-live one in the menu (the footer has no Website icon of its own).
+    assert!(h.query_all_by_label_contains("Website").count() >= 1);
 }
 
 /// Clicks the `n`th widget labelled `label` and returns the URL the app asked to open.
@@ -2541,25 +2534,21 @@ fn all_opened(h: &mut Harness<'_, Option<LauncherUi>>, label: &str) -> Vec<Strin
 }
 
 #[test]
-/// Footer, card and social links open their expected pages; one card menu's All releases action
+/// Footer, card and credit links open their expected pages; one card menu's All releases action
 /// opens a repository releases page.
 fn links_open_the_right_pages() {
     let (mut h, _) = harness(ViewMode::Grid, egui::Theme::Dark, true);
     h.run_steps(6);
-    assert_eq!(click_opens(&mut h, "Discord").as_deref(), Some("https://discord.gg/artcraft"));
-    // The footer's ArtCraft links and each card's own pages.
+    // The footer's community link and each card's own pages.
     let github = all_opened(&mut h, "GitHub");
-    assert!(github.contains(&"https://github.com/storytold".to_string()), "{github:?}");
+    assert!(github.contains(&"https://github.com/mirasins".to_string()), "{github:?}");
     assert!(github.contains(&"https://github.com/storytold/photocraft".to_string()), "{github:?}");
-    let sites = all_opened(&mut h, "Website");
-    assert!(sites.contains(&"https://getartcraft.com".to_string()), "{sites:?}");
-    assert_eq!(sites, vec!["https://getartcraft.com".to_string()], "{sites:?}");
-    // Social icons in the footer.
-    assert_eq!(click_opens(&mut h, "X").as_deref(), Some("https://x.com/get_artcraft"));
-    assert_eq!(click_opens(&mut h, "YouTube").as_deref(), Some("https://www.youtube.com/@OfficialArtcraftStudios"));
-    assert_eq!(click_opens(&mut h, "TikTok").as_deref(), Some("https://www.tiktok.com/@artcraft.studios"));
-    assert_eq!(click_opens(&mut h, "Instagram").as_deref(), Some("https://www.instagram.com/officialartcraftstudios"));
-    assert_eq!(click_opens(&mut h, "LinkedIn").as_deref(), Some("https://www.linkedin.com/company/artcraft-ai"));
+    // The footer's credit opens the original project's repository.
+    assert_eq!(click_opens(&mut h, "Upstream project").as_deref(), Some("https://github.com/storytold/craft-launcher"));
+    // No ArtCraft community invite is left anywhere in the interface.
+    for gone in ["Discord", "X", "YouTube", "TikTok", "Instagram", "LinkedIn"] {
+        assert_eq!(h.query_all_by_label(gone).count(), 0, "{gone} is still linked somewhere");
+    }
     // The … menu.
     h.get_all_by_label_contains("More actions").next().unwrap().click();
     h.run_steps(3);
@@ -2601,15 +2590,9 @@ fn hostile_release_asset_urls_never_reach_the_opener() {
 }
 
 #[test]
-fn discord_link_opens_app_when_discord_is_installed() {
-    let (mut h, _) = harness_with_discord(Some(artcraft_launcher_core::catalog::DISCORD_APP_URL));
-    h.run_steps(6);
-    assert_eq!(click_opens(&mut h, "Discord").as_deref(), Some("discord://-/invite/artcraft"));
-}
-
-#[test]
 /// Background app detection remains on its own five-minute cadence; release polling is separate.
 fn looks_again_at_installed_apps_every_few_minutes_not_every_frame() {
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     let sent = Rc::new(RefCell::new(Vec::new()));
     let clock = Rc::new(Cell::new(NOW));
     let mut backend = Some(Fake {
@@ -2650,6 +2633,7 @@ fn looks_again_at_installed_apps_every_few_minutes_not_every_frame() {
 /// Update and restart queues `UpdateLauncher`, progress hides the button, and
 /// `LauncherRestarting` asks the host to quit; the update title is announced once.
 fn the_launcher_updates_itself_and_quits_to_restart() {
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     struct QuitHost(Rc<Cell<bool>>);
     impl Host for QuitHost {
         fn quit(&mut self) {
@@ -2775,6 +2759,7 @@ fn the_current_desktop_setting_is_only_offered_where_the_os_has_desktops() {
 /// A feed alert is acknowledged only by OK (persisted), while an inline announcement stays until
 /// its own Dismiss is clicked.
 fn feed_announcements_and_alerts_show_until_dismissed() {
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     use artcraft_launcher_core::feed::Notice;
     let notice = |id: &str, title: &str, link: Option<&str>| Notice {
         id: id.into(),
@@ -2842,6 +2827,7 @@ fn automatic_checks_run_every_twelve_minutes() {
 /// With auto-update on, outdated apps are queued for Install and the launcher for
 /// `UpdateLauncher`.
 fn automatic_updates_queue_installs_for_outdated_apps_and_launcher() {
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     let mut ev = events();
     ev.push(Event::LauncherUpdate(release("artcraft-launcher", "0.2.0", NOW)));
     let sent = Rc::new(RefCell::new(Vec::new()));
@@ -2879,6 +2865,7 @@ fn automatic_updates_queue_installs_for_outdated_apps_and_launcher() {
 /// Automatic updates and update notices skip a newer release with nothing for this computer: its
 /// install could only fail. The other update still goes ahead.
 fn automatic_updates_skip_a_release_without_a_download_here() {
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     let ev = no_photocraft_download_here(events());
     let sent = Rc::new(RefCell::new(Vec::new()));
     let sent2 = sent.clone();
@@ -2918,6 +2905,7 @@ fn automatic_updates_skip_a_release_without_a_download_here() {
 /// backend says so, so with notifications and automatic updates on there is no Update button or
 /// count, no notice (and 0.5.0 isn't recorded as announced), no install queued; Open still opens it.
 fn a_freebsd_system_binary_is_not_offered_an_update_it_would_refuse() {
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     struct Notices(Rc<RefCell<Vec<String>>>);
     impl Host for Notices {
         fn notify(&mut self, title: &str, _body: &str) {
@@ -3002,6 +2990,7 @@ fn a_freebsd_system_binary_is_not_offered_an_update_it_would_refuse() {
 #[test]
 /// With auto-update off, no app install or launcher update is queued.
 fn automatic_updates_are_disabled_by_default() {
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     let mut ev = events();
     ev.push(Event::LauncherUpdate(release("artcraft-launcher", "0.2.0", NOW)));
     let sent = Rc::new(RefCell::new(Vec::new()));
@@ -3039,6 +3028,7 @@ fn automatic_updates_are_disabled_by_default() {
 /// The footer names the release origins actually in use, adding GitHub only when some release
 /// came from there.
 fn the_footer_names_the_services_behind_what_is_on_screen() {
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     let footer = |extra: Vec<Event>| {
         let mut evs = events();
         evs.extend(extra);
@@ -3091,6 +3081,7 @@ fn web_build_offers_downloads() {
 /// A custom title bar shows Minimize, Maximize and Close, and Close requests the viewport close
 /// command.
 fn custom_title_bar_has_window_buttons() {
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     struct FramelessHost;
     impl Host for FramelessHost {
         fn title_bar(&self) -> artcraft_launcher_ui_egui::TitleBar {
@@ -3672,8 +3663,9 @@ fn the_drawer_and_the_enlarged_picture_survive_any_window_size() {
 
 #[test]
 /// At 720–1180 px the rate-limit notice stays readable and clear of the footer's checked time
-/// and eight right-side links.
+/// and right-side links.
 fn the_rate_limit_notice_never_runs_under_the_footer_links() {
+    artcraft_launcher_ui_egui::i18n::set_test_lang(artcraft_launcher_ui_egui::i18n::Lang::EN);
     for width in [720.0, 960.0, 1180.0] {
         let mut evs = events();
         evs.push(Event::CheckFinished { at: NOW - 180, source: Source::GitHubApi, rate_limited_until: Some(NOW + 1800) });
@@ -3707,12 +3699,12 @@ fn the_rate_limit_notice_never_runs_under_the_footer_links() {
         let checked = h.get_by_label_contains("Checked ").rect();
         // Cut short in a narrow window, but enough of it left to read.
         assert!(notice.width() >= 120.0 && notice.right() <= width, "{width}: notice {notice:?}");
-        // Everything on the footer's right: the website, GitHub and Discord icons and the social icons.
+        // Everything on the footer's right: the community and upstream-credit icons.
         let mut right = Vec::new();
-        for label in ["Website", "GitHub", "Discord", "X", "YouTube", "TikTok", "Instagram", "LinkedIn"] {
+        for label in ["GitHub", "Upstream project"] {
             right.extend(h.query_all_by_label(label).map(|n| n.rect()).filter(|r| (r.center().y - notice.center().y).abs() < 12.0));
         }
-        assert_eq!(right.len(), 8, "{width}: {right:?}");
+        assert_eq!(right.len(), 2, "{width}: {right:?}");
         assert!(h.query_by_label_contains("Installing for").is_none(), "{width}: the footer no longer names the platform");
         for r in right {
             assert!(!r.intersects(notice), "{width}: notice {notice:?} overlaps {r:?}");

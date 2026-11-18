@@ -39,7 +39,6 @@
 	Installed version	Установленная версия
 	Latest version	Последняя версия
 	Newest release	Новый релиз
-	Discord	Discord
 	GitHub	GitHub
 	Website	Веб-сайт
 	Classic apps	Классические приложения
@@ -113,7 +112,7 @@
 	Show the window on the current desktop	Показывать окно на текущем рабочем столе
 	Start ArtCraft Launcher when I log in	Запускать ArtCraft Launcher при входе в систему
 	Community	Сообщество
-	Questions, ideas and news from the ArtCraft team	Вопросы, идеи и новости от команды ArtCraft
+	Questions, ideas and news from the Mirai community	Вопросы, идеи и новости от сообщества Mirai
 	Appearance	Внешний вид
 	Quit ArtCraft Launcher	Выйти из ArtCraft Launcher
 	Done	Готово
@@ -146,7 +145,7 @@
 	Apps you hid	Приложения, которые вы скрыли
 	Checked {ago} · using {sources}	Проверено {ago} · через {sources}
 	{a} and {b}	{a} и {b}
-	Join the Discord	Присоединиться к Discord
+	Join the Mirai community	Присоединиться к сообществу Mirai
 	Learn more	Подробнее
 	Minimize	Свернуть
 	Maximize	Развернуть
@@ -223,8 +222,8 @@ month	Dec	дек.
 	Installing for {platform}	Установка для {platform}
 	Downloads for {platform}	Скачивание для {platform}
 	No downloads for this system	Нет загрузок для этой системы
-	Join the ArtCraft community on Discord	Присоединиться к сообществу ArtCraft в Discord
-	ArtCraft on {name}	ArtCraft в {name}
+	Report an issue	Сообщить о проблеме
+	Mirai Launcher is an independent fork of {upstream} by Storytold and is not affiliated with ArtCraft.	Mirai Launcher — это независимый форк {upstream} от Storytold, не связанный с ArtCraft.
 	Couldn't open {name}: {e}	Не удалось открыть {name}: {e}
 	Download cancelled	Скачивание отменено
 	Available to install	Доступно для установки
@@ -363,8 +362,8 @@ filter	Installed	Установлены
 	Show ArtCraft Launcher	Показать ArtCraft Launcher
 	Check for Updates	Проверить обновления
 	Visit getartcraft.com	Открыть getartcraft.com
-	ArtCraft on GitHub	ArtCraft на GitHub
-	Join the ArtCraft Discord	Присоединиться к Discord ArtCraft
+	Upstream project	Первоначальный проект
+	Based on {upstream} by Storytold	Основано на {upstream} от Storytold
 	App details	О приложении
 	More actions for {name}	Другие действия для {name}
 	Close (Esc)	Закрыть (Esc)

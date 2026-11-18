@@ -21,7 +21,7 @@
 </p>
 
 <p align="center">
-  <a href="https://discord.gg/artcraft"><img alt="Join the ArtCraft community on Discord" src="https://img.shields.io/badge/Join%20us%20on%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height="40"></a>
+  <a href="https://github.com/mirasins"><img alt="Join the Mirai community" src="https://img.shields.io/badge/Join_the-Mirai_community-181717?style=for-the-badge&logo=github&logoColor=white" height="40"></a>
 </p>
 
 <p align="center">
@@ -31,9 +31,11 @@
 </p>
 
 > [!NOTE]
-> **ArtCraft is a community of artists from all walks of life.** Painters, photographers,
-> filmmakers, illustrators, designers, animators, hobbyists, and people who picked up a pencil
-> last week. If you make things, you're one of us. **[Come say hi on Discord](https://discord.gg/artcraft).**
+> **Mirai Launcher is the Mirai fork of ArtCraft Launcher**, an independent project maintained by
+> [mirasins](https://github.com/mirasins) and not affiliated with ArtCraft or Storytold. If you
+> make things with the Craft apps, you're one of us. **[Come say hi on
+> GitHub](https://github.com/mirasins)** — that's where the Mirai community lives, and
+> [issues](https://github.com/mirasins/mirai-launcher/issues) reach the maintainer.
 
 <p align="center">
   <a href="#what-it-does">What it does</a> ·
@@ -41,7 +43,7 @@
   <a href="#downloads">Downloads</a> ·
   <a href="#build-from-source">Build from source</a> ·
   <a href="#the-craft-app-suite">Craft App Suite</a> ·
-  <a href="https://discord.gg/artcraft">Discord</a>
+  <a href="https://github.com/mirasins">Community</a>
 </p>
 
 <p align="center">
@@ -247,8 +249,8 @@ New contributors and AI agents: start with [`AGENTS.md`](AGENTS.md). Release pac
 
 > [!IMPORTANT]
 > **Status:** ArtCraft Launcher is new and in early alpha. Expect rough edges, and please file
-> issues (include your OS, which app you were installing and the launcher's log file) or tell us on
-> [Discord](https://discord.gg/artcraft).
+> issues (include your OS, which app you were installing and the launcher's log file) at
+> [github.com/mirasins/mirai-launcher/issues](https://github.com/mirasins/mirai-launcher/issues).
 
 ## The Craft App Suite
 
@@ -281,23 +283,31 @@ stand on its own.
 <br>
 
 <p align="center">
-  <a href="https://discord.gg/artcraft"><img alt="Join the ArtCraft community on Discord" src="https://img.shields.io/badge/Join%20us%20on%20Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" height="40"></a>
+  <a href="https://github.com/mirasins"><img alt="Join the Mirai community" src="https://img.shields.io/badge/Join_the-Mirai_community-181717?style=for-the-badge&logo=github&logoColor=white" height="40"></a>
 </p>
 
-<h3 align="center">Come make things with us</h3>
+<h3 align="center">Join the Mirai community</h3>
 
 <p align="center">
-  Our Discord is where artists of every kind hang out: people who paint, shoot, draw, cut film,
-  set type, and people still figuring out what they like to make. Share what you're working on,
-  ask for help, tell us what's broken, or tell us what you wish these tools could do.
-  Whatever your medium and however long you've been at it, you're welcome here.
+  The fork is maintained by <a href="https://github.com/mirasins">mirasins</a>, and its community
+  lives on GitHub: share what you're working on with the Craft apps, ask for help, tell us what's
+  broken, or tell us what you wish these tools could do. Whatever your medium and however long
+  you've been at it, you're welcome here.
 </p>
 
 <p align="center">
-  <a href="https://discord.gg/artcraft"><b>discord.gg/artcraft</b></a> ·
-  <a href="https://getartcraft.com/">getartcraft.com</a> ·
-  <a href="https://getartcraft.com/apps">The Craft App Suite</a> ·
-  <a href="https://github.com/storytold/craft-launcher">ArtCraft Launcher</a>
+  <a href="https://github.com/mirasins"><b>github.com/mirasins</b></a> ·
+  <a href="https://github.com/mirasins/mirai-launcher/issues">Report an issue</a>
+</p>
+
+<h3 align="center">The original project</h3>
+
+<p align="center">
+  Mirai Launcher is an independent fork, not affiliated with ArtCraft or Storytold, based on
+  <a href="https://github.com/storytold/craft-launcher"><b>ArtCraft Launcher</b></a> by
+  <a href="https://getartcraft.com/">Storytold</a>. The launcher and the Craft App Suite it
+  installs come from the original project and its community, and the credit for them stays
+  with Storytold.
 </p>
 
 ---
@@ -339,5 +349,7 @@ forks must remove them. This fork, Mirai Launcher, shows its own Mirai icon inst
 ([`assets/app-icon/`](assets/app-icon/), MIT OR Apache-2.0).
 
 <p align="center">
-  <sub>Made by the <a href="https://getartcraft.com/">ArtCraft</a> team and community.</sub>
+  <sub>Made by the <a href="https://github.com/mirasins">Mirai</a> community, based on
+  <a href="https://github.com/storytold/craft-launcher">ArtCraft Launcher</a> by the
+  <a href="https://getartcraft.com/">ArtCraft</a> team and community.</sub>
 </p>

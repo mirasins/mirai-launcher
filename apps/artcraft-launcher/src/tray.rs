@@ -59,16 +59,14 @@ impl Tray {
     pub fn new(wake: impl Fn() + Send + Sync + Clone + 'static, on_quit: impl Fn() + Send + Sync + 'static) -> Result<Self, String> {
         let show = MenuItem::new(i18n::t("Show ArtCraft Launcher"), true, None);
         let check = MenuItem::new(i18n::t("Check for Updates"), true, None);
-        use artcraft_launcher_core::catalog::{GITHUB_URL, WEBSITE_URL};
-        let website = MenuItem::new(i18n::t("Visit getartcraft.com"), true, None);
-        let github = MenuItem::new(i18n::t("ArtCraft on GitHub"), true, None);
-        let discord = MenuItem::new(i18n::t("Join the ArtCraft Discord"), true, None);
+        use artcraft_launcher_core::catalog::{COMMUNITY_URL, ISSUES_URL};
+        let community = MenuItem::new(i18n::t("Join the Mirai community"), true, None);
+        let issues = MenuItem::new(i18n::t("Report an issue"), true, None);
         let quit = MenuItem::new(i18n::t("Quit ArtCraft Launcher"), true, None);
         let menu = Menu::new();
-        menu.append_items(&[&show, &check, &PredefinedMenuItem::separator(), &website, &github, &discord, &PredefinedMenuItem::separator(), &quit])
+        menu.append_items(&[&show, &check, &PredefinedMenuItem::separator(), &community, &issues, &PredefinedMenuItem::separator(), &quit])
             .map_err(|e| e.to_string())?;
-        let links = [(website.id().clone(), WEBSITE_URL), (github.id().clone(), GITHUB_URL)];
-        let discord_id = discord.id().clone();
+        let links = [(community.id().clone(), COMMUNITY_URL), (issues.id().clone(), ISSUES_URL)];
         let image = load_icon()?;
         let builder = identity(TrayIconBuilder::new()).with_menu(Box::new(menu));
         // macOS draws the icon as a template image (recoloured for light and dark menu bars).
@@ -86,7 +84,7 @@ impl Tray {
         {
             let tx = tx.clone();
             let wake = wake.clone();
-            let ids = (show_id.clone(), check_id.clone(), quit_id.clone(), discord_id);
+            let ids = (show_id.clone(), check_id.clone(), quit_id.clone());
             MenuEvent::set_event_handler(Some(move |e: MenuEvent| {
                 let action = if e.id == ids.0 {
                     TrayAction::Show
@@ -94,8 +92,6 @@ impl Tray {
                     TrayAction::Check
                 } else if e.id == ids.2 {
                     TrayAction::Quit
-                } else if e.id == ids.3 {
-                    TrayAction::Open(artcraft_launcher_native::process::discord_url())
                 } else if let Some((_, url)) = links.iter().find(|(id, _)| *id == e.id) {
                     TrayAction::Open(url)
                 } else {
@@ -117,9 +113,8 @@ impl Tray {
         let labels = vec![
             (show, "Show ArtCraft Launcher"),
             (check, "Check for Updates"),
-            (website, "Visit getartcraft.com"),
-            (github, "ArtCraft on GitHub"),
-            (discord, "Join the ArtCraft Discord"),
+            (community, "Join the Mirai community"),
+            (issues, "Report an issue"),
             (quit, "Quit ArtCraft Launcher"),
         ];
         Ok(Self { icon, show: show_id, check: check_id, quit: quit_id, rx, tooltip: String::new(), language: String::new(), labels })

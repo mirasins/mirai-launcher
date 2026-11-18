@@ -41,7 +41,6 @@
 	Installed version	Telepített verzió
 	Latest version	Legújabb verzió
 	Newest release	Legújabb kiadás
-	Discord	Discord
 	GitHub	GitHub
 	Website	Webhely
 	Classic apps	Eredeti alkalmazások
@@ -115,7 +114,7 @@
 	Show the window on the current desktop	Ablak megjelenítése az aktuális asztalon
 	Start ArtCraft Launcher when I log in	ArtCraft Launcher indítása bejelentkezéskor
 	Community	Közösség
-	Questions, ideas and news from the ArtCraft team	Kérdések, ötletek és hírek az ArtCraft csapatától
+	Questions, ideas and news from the Mirai community	Kérdések, ötletek és hírek a Mirai közösségtől
 	Appearance	Megjelenés
 	Quit ArtCraft Launcher	Kilépés az ArtCraft Launcherből
 	Done	Kész
@@ -148,7 +147,7 @@
 	Apps you hid	Az általad elrejtett alkalmazások
 	Checked {ago} · using {sources}	Ellenőrizve: {ago} · {sources}
 	{a} and {b}	{a} és {b}
-	Join the Discord	Csatlakozás a Discordhoz
+	Join the Mirai community	Csatlakozz a Mirai közösségéhez
 	Learn more	További információ
 	Minimize	Kis méret
 	Maximize	Teljes méret
@@ -225,8 +224,8 @@ month	Dec	dec.
 	Installing for {platform}	Telepítés {platform} rendszerre
 	Downloads for {platform}	Letöltések {platform} rendszerre
 	No downloads for this system	Nincsenek letöltések ehhez a rendszerhez
-	Join the ArtCraft community on Discord	Csatlakozz az ArtCraft közösségéhez a Discordon
-	ArtCraft on {name}	ArtCraft – {name}
+	Report an issue	Hiba bejelentése
+	Mirai Launcher is an independent fork of {upstream} by Storytold and is not affiliated with ArtCraft.	A Mirai Launcher a Storytold által készített {upstream} független forkja, és nem áll kapcsolatban az ArtCrafttal.
 	Couldn't open {name}: {e}	{name} nem nyitható meg: {e}
 	Download cancelled	Letöltés megszakítva
 	Available to install	Telepíthető
@@ -382,8 +381,8 @@ filter	Installed	Telepítve
 	Show ArtCraft Launcher	ArtCraft Launcher megjelenítése
 	Check for Updates	Frissítések keresése
 	Visit getartcraft.com	getartcraft.com megnyitása
-	ArtCraft on GitHub	ArtCraft a GitHubon
-	Join the ArtCraft Discord	Csatlakozás az ArtCraft Discord-közösségéhez
+	Upstream project	Az eredeti projekt
+	Based on {upstream} by Storytold	A Storytold {upstream} projektje alapján
 @plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · {n} frissítés elérhető|ArtCraft Launcher · {n} frissítés elérhető
 
 	Download size: {size}	Letöltési méret: {size}

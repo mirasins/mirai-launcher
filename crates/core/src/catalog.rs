@@ -158,28 +158,20 @@ include!(concat!(env!("OUT_DIR"), "/catalog.rs"));
 /// Machines LLC): the macOS side of the Windows publisher check.
 pub const ARTCRAFT_TEAM_ID: &str = "DJ6XS33FX8";
 
-/// ArtCraft's website.
+/// ArtCraft's website: the upstream team's own page, linked from the fork's credit line.
 pub const WEBSITE_URL: &str = "https://getartcraft.com";
 /// The GitHub account every official Craft App's repository lives under. The release feed can
 /// only move an app within it; a community app installs from its own repo, pinned in [`SUITE`].
 pub const GITHUB_OWNER: &str = "storytold";
 /// The GitHub account the Mirai forks (apps with `channel = Some("mirai")`) are published under.
 pub const MIRAI_OWNER: &str = "mirasins";
-/// ArtCraft on GitHub: every Craft App's source.
-pub const GITHUB_URL: &str = "https://github.com/storytold";
-/// ArtCraft's social accounts: (service, URL). Shown as small icons, less prominent than Discord.
-pub const SOCIAL: [(&str, &str); 5] = [
-    ("X", "https://x.com/get_artcraft"),
-    ("Instagram", "https://www.instagram.com/officialartcraftstudios"),
-    ("LinkedIn", "https://www.linkedin.com/company/artcraft-ai"),
-    ("YouTube", "https://www.youtube.com/@OfficialArtcraftStudios"),
-    ("TikTok", "https://www.tiktok.com/@artcraft.studios"),
-];
-
-/// The ArtCraft community on Discord.
-pub const DISCORD_URL: &str = "https://discord.gg/artcraft";
-/// Deep link into the Discord application for the ArtCraft server invite.
-pub const DISCORD_APP_URL: &str = "discord://-/invite/artcraft";
+/// The fork's community: its owner's GitHub account. Every link that invites the user to join,
+/// ask or offer feedback opens this, not one of ArtCraft's spaces.
+pub const COMMUNITY_URL: &str = "https://github.com/mirasins";
+/// Where a problem with this fork is reported.
+pub const ISSUES_URL: &str = "https://github.com/mirasins/mirai-launcher/issues";
+/// The upstream project this fork is based on; the credit links here.
+pub const UPSTREAM_URL: &str = "https://github.com/storytold/craft-launcher";
 
 /// ArtCraft Launcher itself, described like a Craft App so it can update itself with the same
 /// machinery (asset names `artcraft-launcher-<ver>-…`, bundle id `ai.storyteller.artcraft-launcher`,
@@ -262,6 +254,17 @@ mod tests {
                 AppKind::Community => assert!(!a.repo.starts_with("storytold/"), "{} is community", a.id),
             }
         }
+    }
+
+    #[test]
+    fn community_support_and_upstream_links_point_where_the_fork_says() {
+        // Community and support lead to the fork owner's GitHub; issues to the fork's tracker.
+        assert_eq!(COMMUNITY_URL, format!("https://github.com/{MIRAI_OWNER}"));
+        assert!(ISSUES_URL.starts_with(&format!("https://github.com/{MIRAI_OWNER}/mirai-launcher")), "{ISSUES_URL}");
+        // The credit keeps pointing at the original project and its own site.
+        assert!(UPSTREAM_URL.starts_with("https://github.com/storytold/"), "{UPSTREAM_URL}");
+        assert_eq!(UPSTREAM_URL, "https://github.com/storytold/craft-launcher");
+        assert_eq!(WEBSITE_URL, "https://getartcraft.com");
     }
 
     #[test]
