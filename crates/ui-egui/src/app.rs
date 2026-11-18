@@ -68,10 +68,6 @@ pub trait Host {
     fn default_install_folder(&mut self, _kind: PackageKind, _arch: Option<Arch>) -> Option<String> {
         None
     }
-    /// The URL to open when Discord is clicked. Defaults to the web link.
-    fn discord_url(&self) -> &'static str {
-        artcraft_launcher_core::catalog::DISCORD_URL
-    }
     /// Quit the launcher for real (not just hide to the tray).
     fn quit(&mut self) {}
 }
@@ -207,8 +203,6 @@ pub struct LauncherUi {
     /// Versions of apps or the launcher already queued for auto-update during this session,
     /// preventing repeated install loops if an update fails or is in progress.
     pub(crate) auto_update_attempted: std::collections::BTreeSet<(String, String)>,
-    /// The URL or deep link to open when Discord is clicked.
-    pub(crate) discord_url: &'static str,
     /// UI actions drawn in this pass, not sent yet.
     pending: Vec<UiAction>,
     /// The `egui::Context::cumulative_frame_nr` those actions belong to.
@@ -313,7 +307,6 @@ impl LauncherUi {
             last_detect: 0,
             was_focused: true,
             auto_update_attempted: std::collections::BTreeSet::new(),
-            discord_url: artcraft_launcher_core::catalog::DISCORD_URL,
             pending: Vec::new(),
             frame: None,
             flushed: Vec::new(),
@@ -907,7 +900,6 @@ impl LauncherUi {
             motion::apply(&ctx, self.reduce_motion);
             self.applied_motion = Some(self.reduce_motion);
         }
-        self.discord_url = host.discord_url();
         let tokens = Tokens::get(&ctx);
         if self.entries.iter().any(|e| e.job.is_some()) || self.checking {
             ctx.request_repaint_after(Duration::from_millis(50));

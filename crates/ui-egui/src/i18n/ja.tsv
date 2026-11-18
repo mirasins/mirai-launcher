@@ -43,7 +43,6 @@
 	Installed version	インストール済みバージョン
 	Latest version	最新バージョン
 	Newest release	最新リリース
-	Discord	Discord
 	GitHub	GitHub
 	Website	ウェブサイト
 	Classic apps	クラシックアプリ
@@ -117,7 +116,7 @@
 	Show the window on the current desktop	現在のデスクトップにウィンドウを表示
 	Start ArtCraft Launcher when I log in	ログイン時に ArtCraft Launcher を起動
 	Community	コミュニティ
-	Questions, ideas and news from the ArtCraft team	ArtCraft チームからの質問、アイデア、ニュース
+	Questions, ideas and news from the Mirai community	Mirai コミュニティからの質問、アイデア、ニュース
 	Appearance	外観
 	Quit ArtCraft Launcher	ArtCraft Launcher を終了
 	Done	完了
@@ -150,7 +149,7 @@
 	Apps you hid	非表示にしたアプリ
 	Checked {ago} · using {sources}	最終確認: {ago} · 取得元: {sources}
 	{a} and {b}	{a} と {b}
-	Join the Discord	Discord に参加
+	Join the Mirai community	Mirai コミュニティに参加
 	Learn more	詳細を見る
 	Minimize	最小化
 	Maximize	最大化
@@ -227,8 +226,8 @@ month	Dec	12月
 	Installing for {platform}	{platform} にインストール
 	Downloads for {platform}	{platform} 用のダウンロード
 	No downloads for this system	このシステム用のダウンロードはありません
-	Join the ArtCraft community on Discord	Discord で ArtCraft コミュニティに参加
-	ArtCraft on {name}	{name} の ArtCraft
+	Report an issue	問題を報告
+	Mirai Launcher is an independent fork of {upstream} by Storytold and is not affiliated with ArtCraft.	Mirai Launcher は Storytold による {upstream} の独立フォークであり、ArtCraft とは提携関係にありません。
 	Couldn't open {name}: {e}	{name} を開けませんでした: {e}
 	Download cancelled	ダウンロードをキャンセルしました
 	Available to install	インストール可能
@@ -384,8 +383,8 @@ filter	Installed	インストール済み
 	Show ArtCraft Launcher	ArtCraft Launcher を表示
 	Check for Updates	更新を確認
 	Visit getartcraft.com	getartcraft.com を開く
-	ArtCraft on GitHub	GitHub の ArtCraft
-	Join the ArtCraft Discord	ArtCraft Discord に参加
+	Upstream project	オリジナルのプロジェクト
+	Based on {upstream} by Storytold	Storytold の {upstream} を基に開発
 @plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · {n} 件の更新があります
 
 	Download size: {size}	ダウンロードサイズ: {size}

@@ -49,9 +49,9 @@
          (build.rs embeds it), at a path every update keeps. -->
     <Icon Id="ArtCraftLauncherIcon.exe" SourceFile="$(var.IconPath)" />
     <Property Id="ARPPRODUCTICON" Value="ArtCraftLauncherIcon.exe" />
-    <Property Id="ARPURLINFOABOUT" Value="https://getartcraft.com/apps" />
-    <Property Id="ARPURLUPDATEINFO" Value="https://github.com/storytold/craft-launcher/releases" />
-    <Property Id="ARPHELPLINK" Value="https://discord.gg/artcraft" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/mirasins" />
+    <Property Id="ARPURLUPDATEINFO" Value="https://github.com/mirasins/mirai-launcher/releases" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/mirasins/mirai-launcher/issues" />
 
     <StandardDirectory Id="LocalAppDataFolder">
       <Directory Id="LocalProgramsFolder" Name="Programs">

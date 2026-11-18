@@ -44,7 +44,6 @@
 	Installed version	დაინსტალირებული ვერსია
 	Latest version	უახლესი ვერსია
 	Newest release	უახლესი გამოშვება
-	Discord	Discord
 	GitHub	GitHub
 	Website	ვებსაიტი
 	Classic apps	კლასიკური აპლიკაციები
@@ -111,7 +110,7 @@
 	Show the window on the current desktop	ფანჯრის ჩვენება მიმდინარე სამუშაო მაგიდაზე
 	Start ArtCraft Launcher when I log in	ArtCraft Launcher-ის გაშვება სისტემაში შესვლისას
 	Community	საზოგადოება
-	Questions, ideas and news from the ArtCraft team	კითხვები, იდეები და სიახლეები ArtCraft-ის გუნდისგან
+	Questions, ideas and news from the Mirai community	კითხვები, იდეები და სიახლეები Mirai-ს საზოგადოებისგან
 	Appearance	იერსახე
 	Quit ArtCraft Launcher	ArtCraft Launcher-იდან გასვლა
 	Done	მზადაა
@@ -145,7 +144,7 @@
 	Apps you hid	თქვენ მიერ დამალული აპლიკაციები
 	Checked {ago} · using {sources}	შემოწმდა {ago} · წყარო: {sources}
 	{a} and {b}	{a} და {b}
-	Join the Discord	შემოუერთდით Discord-ს
+	Join the Mirai community	შემოუერთდით Mirai-ს საზოგადოებას
 	Learn more	დაწვრილებით
 	Minimize	ჩაკეცვა
 	Maximize	გაშლა
@@ -229,8 +228,8 @@ month	Dec	დეკ
 	Installing for {platform}	ინსტალაცია პლატფორმისთვის: {platform}
 	Downloads for {platform}	ჩამოტვირთვები პლატფორმისთვის: {platform}
 	No downloads for this system	ამ სისტემისთვის ჩამოსატვირთი არაფერია
-	Join the ArtCraft community on Discord	შემოუერთდით ArtCraft-ის საზოგადოებას Discord-ზე
-	ArtCraft on {name}	ArtCraft {name}-ზე
+	Report an issue	პრობლემის შეტყობინება
+	Mirai Launcher is an independent fork of {upstream} by Storytold and is not affiliated with ArtCraft.	Mirai Launcher არის {upstream}-ის (Storytold-ის პროექტის) დამოუკიდებელი ფორკი და ArtCraft-თან არ არის დაკავშირებული.
 	Couldn't open {name}: {e}	{name} ვერ გაიხსნა: {e}
 	Download cancelled	ჩამოტვირთვა გაუქმდა
 	Available to install	ხელმისაწვდომია
@@ -385,8 +384,8 @@ filter	Installed	დაინსტალირებული
 	Show ArtCraft Launcher	ArtCraft Launcher-ის ჩვენება
 	Check for Updates	განახლებების შემოწმება
 	Visit getartcraft.com	getartcraft.com-ის გახსნა
-	ArtCraft on GitHub	ArtCraft GitHub-ზე
-	Join the ArtCraft Discord	შემოუერთდით ArtCraft-ის Discord-ს
+	Upstream project	საწყისი პროექტი
+	Based on {upstream} by Storytold	დაფუძნებულია Storytold-ის {upstream}-ზე
 @plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · ხელმისაწვდომია {n} განახლება|ArtCraft Launcher · ხელმისაწვდომია {n} განახლება
 	Install folder	ინსტალაციის საქაღალდე
 	Default install folder	ნაგულისხმევი ინსტალაციის საქაღალდე

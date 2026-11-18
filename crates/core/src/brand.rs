@@ -24,6 +24,12 @@ const CACHE_LIMIT: usize = 4096;
 /// `s` with the launcher's upstream name replaced by [`APP_NAME`]; `s` itself when it doesn't name
 /// the launcher. The rebranded copies are cached for the life of the process, so a string is
 /// rebuilt once.
+///
+/// A credit to the upstream project never passes the name through here: a string like
+/// "Based on ArtCraft Launcher by Storytold" would come out crediting "Mirai Launcher" to
+/// Storytold. Credit strings keep the name out of the translated template — a `{upstream}`
+/// placeholder filled with [`UPSTREAM_NAME`] after translation — so what the user reads always
+/// names the original project. `i18n`'s tests hold that promise.
 pub fn rebrand(s: &str) -> &str {
     if !s.contains(UPSTREAM_NAME) {
         return s;
@@ -66,6 +72,26 @@ mod tests {
         // The company and the suite keep their names; only the launcher's changes.
         assert_eq!(rebrand("Join the ArtCraft community"), "Join the ArtCraft community");
         assert_eq!(rebrand_owned("artcraft-launcher".into()), "artcraft-launcher");
+    }
+
+    #[test]
+    fn the_upstream_credit_never_names_the_fork() {
+        // `rebrand` would fold the original project's name into the fork's, which is why a
+        // credit never spells the name inside a translated string: the UI keeps it in a
+        // `{upstream}` placeholder and fills it in with [`UPSTREAM_NAME`] after translation.
+        // The all-languages check that the rendered credit keeps the name lives with the
+        // catalogs, in `ui-egui`'s i18n tests.
+        assert_eq!(
+            rebrand("Based on ArtCraft Launcher by Storytold"),
+            "Based on Mirai Launcher by Storytold",
+            "a credit through `tr` would be rewritten; credits must fill the name in afterwards"
+        );
+        // The placeholder template a credit actually uses is safe to translate: the template
+        // never names the launcher, and filling the name in afterwards (what `ui-egui`'s `fmt`
+        // does) leaves it outside `rebrand`'s reach.
+        let translated = rebrand("Based on {upstream} by Storytold");
+        let out = translated.replace("{upstream}", UPSTREAM_NAME);
+        assert!(out.contains(UPSTREAM_NAME) && !out.contains(APP_NAME), "{out}");
     }
 
     #[test]

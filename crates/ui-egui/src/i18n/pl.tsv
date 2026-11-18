@@ -41,7 +41,6 @@
 	Installed version	Zainstalowana wersja
 	Latest version	Najnowsza wersja
 	Newest release	Najnowsze wydanie
-	Discord	Discord
 	GitHub	GitHub
 	Website	Strona
 	Classic apps	Klasyczne aplikacje
@@ -116,7 +115,7 @@
 	Show the window on the current desktop	Pokaż okno na bieżącym pulpicie
 	Start ArtCraft Launcher when I log in	Uruchom ArtCraft Launcher po zalogowaniu
 	Community	Społeczność
-	Questions, ideas and news from the ArtCraft team	Pytania, pomysły i nowości od zespołu ArtCraft
+	Questions, ideas and news from the Mirai community	Pytania, pomysły i nowości od społeczności Mirai
 	Appearance	Motyw
 	Quit ArtCraft Launcher	Wyjdź z ArtCraft Launcher
 	Done	Gotowe
@@ -149,7 +148,7 @@
 	Apps you hid	Aplikacje ukryte przez ciebie
 	Checked {ago} · using {sources}	Ostatnio sprawdzono {ago} · przy użyciu {sources}
 	{a} and {b}	{a} i {b}
-	Join the Discord	Dołącz na Discorda
+	Join the Mirai community	Dołącz do społeczności Mirai
 	Learn more	Więcej
 	Minimize	Minimalizuj
 	Maximize	Maksymalizuj
@@ -226,8 +225,8 @@ month	Dec	gru
 	Installing for {platform}	Instalowanie dla {platform}
 	Downloads for {platform}	Do pobrania dla {platform}
 	No downloads for this system	Brak pobrań dla tego systemu
-	Join the ArtCraft community on Discord	Dołącz do społeczności ArtCraft na Discordzie
-	ArtCraft on {name}	ArtCraft w serwisie {name}
+	Report an issue	Zgłoś problem
+	Mirai Launcher is an independent fork of {upstream} by Storytold and is not affiliated with ArtCraft.	Mirai Launcher to niezależny fork {upstream} (projektu Storytold) i nie jest powiązany z ArtCraftem.
 	Couldn't open {name}: {e}	Nie udało się otworzyć {name}: {e}
 	Download cancelled	Anulowano pobieranie
 	Available to install	Dostępna do instalacji
@@ -383,8 +382,8 @@ filter	Installed	Zainstalowane
 	Show ArtCraft Launcher	Pokaż ArtCraft Launcher
 	Check for Updates	Sprawdź dostępność aktualizacji
 	Visit getartcraft.com	Odwiedź getartcraft.com
-	ArtCraft on GitHub	ArtCraft na GitHubie
-	Join the ArtCraft Discord	Dołącz do Discorda ArtCraft
+	Upstream project	Pierwotny projekt
+	Based on {upstream} by Storytold	Oparty na projekcie {upstream} od Storytold
 @plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · {n} dostępna aktualizacja|ArtCraft Launcher · {n} dostępne aktualizacje|ArtCraft Launcher · {n} dostępnych aktualizacji
 
 	Download size: {size}	Rozmiar pobierania: {size}

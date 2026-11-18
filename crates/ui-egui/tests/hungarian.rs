@@ -167,27 +167,37 @@ fn check_settings_layout() {
         h.run_steps(8);
         let theme = h.get_by_label("Rendszerbeállítás szerint").rect();
         assert!(theme.bottom() < done.top(), "appearance controls must scroll above the fixed actions");
-        h.get_by_label("Csatlakozás a Discordhoz").scroll_to_me();
-        h.run_steps(8);
-        // The footer has the same services, and the cards behind the modal have Webhely and GitHub
-        // links as one 14px line of text; keep only the settings body's buttons (34px) and icons (24px).
-        let discord = h.get_by_label("Csatlakozás a Discordhoz").rect();
-        assert!(screen.contains_rect(discord), "community links must be reachable by scrolling");
-        let mut links = vec![discord];
-        for label in ["Webhely", "GitHub", "X", "Instagram", "LinkedIn", "YouTube", "TikTok"] {
-            let candidates: Vec<_> = h
-                .query_all_by_label(label)
-                .map(|n| n.rect())
-                .filter(|r| r.top() >= discord.top() - 1.0 && r.bottom() < done.top() && r.height() > 20.0)
-                .collect();
-            assert_eq!(candidates.len(), 1, "{width}x{height}: settings link {label}: {candidates:?}");
-            links.extend(candidates);
-        }
-        for (i, r) in links.iter().enumerate() {
-            assert!(screen.contains_rect(*r), "{width}x{height}: link is clipped: {r:?}");
-            for other in links.iter().skip(i + 1) {
-                assert!(!r.intersects(*other), "{width}x{height}: links overlap: {r:?}, {other:?}");
+        // The community buttons and the credit's links sit in different rows of one panel, so the
+        // panel is scrolled into view from its first button and from its last link (the footer's
+        // upstream-credit icon shares its label with the settings button, so only unique labels
+        // anchor a scroll), and every link is checked wherever it lands on screen. The footer's
+        // icons and the cards behind the modal sit below the fixed actions and never qualify.
+        let links = ["Csatlakozz a Mirai közösségéhez", "Hiba bejelentése", "Az eredeti projekt", "getartcraft.com megnyitása"];
+        let mut seen = vec![false; links.len()];
+        for anchor in ["Csatlakozz a Mirai közösségéhez", "getartcraft.com megnyitása"] {
+            h.get_by_label(anchor).scroll_to_me();
+            h.run_steps(8);
+            let mut on_screen: Vec<egui::Rect> = Vec::new();
+            for (i, label) in links.iter().enumerate() {
+                let candidates: Vec<egui::Rect> = h
+                    .query_all_by_label(label)
+                    .map(|n| n.rect())
+                    .filter(|r| r.bottom() < done.top() && r.height() > 20.0 && screen.contains_rect(*r))
+                    .collect();
+                assert!(candidates.len() <= 1, "{width}x{height}: settings link {label} appears twice on screen: {candidates:?}");
+                if let Some(rect) = candidates.first() {
+                    seen[i] = true;
+                    on_screen.push(*rect);
+                }
             }
+            for (i, r) in on_screen.iter().enumerate() {
+                for other in on_screen.iter().skip(i + 1) {
+                    assert!(!r.intersects(*other), "{width}x{height}: links overlap at {anchor:?}: {r:?}, {other:?}");
+                }
+            }
+        }
+        for (i, label) in links.iter().enumerate() {
+            assert!(seen[i], "{width}x{height}: settings link {label} is never reachable by scrolling");
         }
         snapshot(&mut h, &format!("settings-hu-{width}x{height}-bottom"));
         h.get_by_label("Nyelv").scroll_to_me();

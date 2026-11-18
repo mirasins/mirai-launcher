@@ -14,7 +14,7 @@ section: utils
 priority: optional
 maintainer: ${ARTCRAFT_LAUNCHER_MAINTAINER}
 vendor: Learning Machines LLC
-homepage: https://github.com/storytold/craft-launcher
+homepage: https://github.com/mirasins/mirai-launcher
 license: MIT OR Apache-2.0
 description: |-
   Install, update and launch the Craft App Suite.

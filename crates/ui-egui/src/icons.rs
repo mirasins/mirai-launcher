@@ -49,17 +49,12 @@ fn desaturate(pixels: &mut [u8]) {
     }
 }
 
-/// A social service's logo (Simple Icons, white, for tinting), by its name in `catalog::SOCIAL`.
+/// A footer link's logo (white, for tinting), by its name: the GitHub mark for the Mirai
+/// community, the globe for the fork's credit to the upstream project.
 pub fn social(service: &str) -> Option<ImageSource<'static>> {
     Some(match service {
-        "X" => egui::include_image!("../../../assets/social/x.svg"),
-        "YouTube" => egui::include_image!("../../../assets/social/youtube.svg"),
-        "TikTok" => egui::include_image!("../../../assets/social/tiktok.svg"),
-        "Instagram" => egui::include_image!("../../../assets/social/instagram.svg"),
         "GitHub" => egui::include_image!("../../../assets/social/github.svg"),
-        "Discord" => egui::include_image!("../../../assets/social/discord.svg"),
         "Website" => egui::include_image!("../../../assets/social/globe.svg"),
-        "LinkedIn" => egui::include_image!("../../../assets/social/linkedin.svg"),
         _ => return None,
     })
 }

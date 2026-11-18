@@ -39,7 +39,6 @@
 	Installed version	Version installée
 	Latest version	Dernière version
 	Newest release	Version la plus récente
-	Discord	Discord
 	GitHub	GitHub
 	Website	Site web
 	Classic apps	Applications classiques
@@ -113,7 +112,7 @@
 	Show the window on the current desktop	Afficher la fenêtre sur le bureau actuel
 	Start ArtCraft Launcher when I log in	Lancer ArtCraft Launcher à l'ouverture de session
 	Community	Communauté
-	Questions, ideas and news from the ArtCraft team	Questions, idées et actualités de l'équipe ArtCraft
+	Questions, ideas and news from the Mirai community	Questions, idées et actualités de la communauté Mirai
 	Appearance	Apparence
 	Quit ArtCraft Launcher	Quitter ArtCraft Launcher
 	Done	Terminé
@@ -146,7 +145,7 @@
 	Apps you hid	Applications que vous avez masquées
 	Checked {ago} · using {sources}	Vérifié {ago} · via {sources}
 	{a} and {b}	{a} et {b}
-	Join the Discord	Rejoindre le Discord
+	Join the Mirai community	Rejoindre la communauté Mirai
 	Learn more	En savoir plus
 	Minimize	Réduire
 	Maximize	Agrandir
@@ -223,8 +222,8 @@ month	Dec	déc.
 	Installing for {platform}	Installation pour {platform}
 	Downloads for {platform}	Téléchargements pour {platform}
 	No downloads for this system	Aucun téléchargement pour ce système
-	Join the ArtCraft community on Discord	Rejoindre la communauté ArtCraft sur Discord
-	ArtCraft on {name}	ArtCraft sur {name}
+	Report an issue	Signaler un problème
+	Mirai Launcher is an independent fork of {upstream} by Storytold and is not affiliated with ArtCraft.	Mirai Launcher est un fork indépendant de {upstream}, le projet original de Storytold, et n'est pas affilié à ArtCraft.
 	Couldn't open {name}: {e}	Impossible d'ouvrir {name} : {e}
 	Download cancelled	Téléchargement annulé
 	Available to install	Disponible à l'installation
@@ -365,8 +364,8 @@ filter	Installed	Installées
 	Show ArtCraft Launcher	Afficher ArtCraft Launcher
 	Check for Updates	Rechercher des mises à jour
 	Visit getartcraft.com	Visiter getartcraft.com
-	ArtCraft on GitHub	ArtCraft sur GitHub
-	Join the ArtCraft Discord	Rejoindre le Discord d'ArtCraft
+	Upstream project	Le projet d'origine
+	Based on {upstream} by Storytold	Basé sur {upstream} de Storytold
 	App details	Détails de l'application
 	More actions for {name}	Autres actions pour {name}
 	Close (Esc)	Fermer (Esc)

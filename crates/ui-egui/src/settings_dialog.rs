@@ -353,29 +353,44 @@ impl LauncherUi {
         });
     }
 
-    /// Community links (Discord, website, GitHub and the social icons) opened through the safe
-    /// external-link path; it queues no app actions.
+    /// The Mirai community's links (GitHub and the issue tracker), then the fork's credit to the
+    /// project it is based on, opened through the safe external-link path; it queues no app actions.
     fn settings_community(&mut self, ui: &mut Ui) {
         let t = Tokens::get(ui.ctx());
         sheet::panel(ui, tl!("Community"), |ui| {
-            ui.label(RichText::new(tl!("Questions, ideas and news from the ArtCraft team")).color(t.muted));
+            ui.label(RichText::new(tl!("Questions, ideas and news from the Mirai community")).color(t.muted));
             ui.add_space(6.0);
             ui.horizontal_wrapped(|ui| {
-                use artcraft_launcher_core::catalog::{GITHUB_URL, WEBSITE_URL};
-                if widgets::button(ui, tl!("Join the Discord"), Kind::Primary, 0.0).on_hover_text(self.discord_url).clicked() {
-                    widgets::open_external_link(ui.ctx(), self.discord_url);
+                use artcraft_launcher_core::catalog::{COMMUNITY_URL, ISSUES_URL};
+                if widgets::button(ui, tl!("Join the Mirai community"), Kind::Primary, 0.0).on_hover_text(COMMUNITY_URL).clicked() {
+                    widgets::open_external_link(ui.ctx(), COMMUNITY_URL);
                 }
-                if widgets::button(ui, tl!("Website"), Kind::Secondary, 0.0).on_hover_text(WEBSITE_URL).clicked() {
+                if widgets::button(ui, tl!("Report an issue"), Kind::Secondary, 0.0).on_hover_text(ISSUES_URL).clicked() {
+                    widgets::open_external_link(ui.ctx(), ISSUES_URL);
+                }
+            });
+            // The credit stands apart from the fork's own links: what follows names the original
+            // project, its author and its site, and says the fork is independent.
+            ui.add_space(8.0);
+            // The upstream project's name is a placeholder filled in after translation, so the
+            // fork's runtime rebranding of "ArtCraft Launcher" cannot rename the project the
+            // credit names (see `core::brand`).
+            note(
+                ui,
+                &fmt(
+                    tl!("Mirai Launcher is an independent fork of {upstream} by Storytold and is not affiliated with ArtCraft."),
+                    &[("upstream", artcraft_launcher_core::brand::UPSTREAM_NAME)],
+                ),
+            );
+            ui.add_space(4.0);
+            ui.horizontal_wrapped(|ui| {
+                use artcraft_launcher_core::catalog::{UPSTREAM_URL, WEBSITE_URL};
+                if widgets::button(ui, tl!("Upstream project"), Kind::Secondary, 0.0).on_hover_text(UPSTREAM_URL).clicked() {
+                    widgets::open_external_link(ui.ctx(), UPSTREAM_URL);
+                }
+                if widgets::button(ui, tl!("Visit getartcraft.com"), Kind::Secondary, 0.0).on_hover_text(WEBSITE_URL).clicked() {
                     widgets::open_external_link(ui.ctx(), WEBSITE_URL);
                 }
-                if widgets::button(ui, tl!("GitHub"), Kind::Secondary, 0.0).on_hover_text(GITHUB_URL).clicked() {
-                    widgets::open_external_link(ui.ctx(), GITHUB_URL);
-                }
-                // Wrap the social links as a group so their icons stay together.
-                let width = widgets::icon_links_width(artcraft_launcher_core::catalog::SOCIAL.len(), 16.0);
-                ui.allocate_ui_with_layout(vec2(width, theme::CONTROL_H), egui::Layout::left_to_right(egui::Align::Center), |ui| {
-                    widgets::social_icons(ui, 16.0);
-                });
             });
         });
     }

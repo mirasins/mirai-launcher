@@ -456,26 +456,26 @@ impl LauncherUi {
             let short = fmt(tl!("GitHub limit hit; back in {min} min"), &[("min", &min)]);
             (format!("· {full}"), format!("· {short}"))
         });
-        use artcraft_launcher_core::catalog::{GITHUB_URL, SOCIAL, WEBSITE_URL};
-        // Every link is an icon, reading Website, GitHub, Discord, then the social accounts.
-        let named =
-            |name: &'static str, label: &str, url: &'static str| widgets::IconLink { name, label: label.to_string(), tip: label.to_string(), url };
-        let mut links = vec![
-            named("Website", tl!("Website"), WEBSITE_URL),
-            named("GitHub", tl!("GitHub"), GITHUB_URL),
+        use artcraft_launcher_core::catalog::{COMMUNITY_URL, UPSTREAM_URL};
+        // Every link is an icon: the Mirai community on GitHub, then the project this fork is
+        // based on, kept clearly apart from the fork's own links.
+        let links = vec![
             widgets::IconLink {
-                name: "Discord",
-                label: tl!("Discord").to_string(),
-                tip: tl!("Join the ArtCraft community on Discord").to_string(),
-                url: self.discord_url,
+                name: "GitHub",
+                label: tl!("GitHub").to_string(),
+                tip: tl!("Join the Mirai community").to_string(),
+                url: COMMUNITY_URL,
+            },
+            widgets::IconLink {
+                name: "Website",
+                label: tl!("Upstream project").to_string(),
+                // The upstream project's name is a placeholder filled in after translation, so
+                // the fork's runtime rebranding of "ArtCraft Launcher" cannot rename the project
+                // the credit names (see `core::brand`).
+                tip: fmt(tl!("Based on {upstream} by Storytold"), &[("upstream", artcraft_launcher_core::brand::UPSTREAM_NAME)]),
+                url: UPSTREAM_URL,
             },
         ];
-        links.extend(SOCIAL.iter().map(|(name, url)| widgets::IconLink {
-            name,
-            label: (*name).to_string(),
-            tip: fmt(tl!("ArtCraft on {name}"), &[("name", name)]),
-            url,
-        }));
         let icon = 13.0;
         let spacing = ui.spacing().item_spacing.x;
         // The icons on the right keep their size; the status on the left gets what is left and

@@ -213,6 +213,24 @@ fn product_names_stay_in_english() {
 }
 
 #[test]
+fn the_upstream_credit_keeps_the_original_project_s_name() {
+    // The fork's runtime rebranding renames "ArtCraft Launcher" in every translated string; a
+    // credit that spelled the name inside the template would credit "Mirai Launcher" to
+    // Storytold. Credit strings keep the name in a `{upstream}` placeholder and fill it in after
+    // translation, so every language, translated or not, names the original project. (That the
+    // plain string would be renamed is held in `core::brand`'s tests.)
+    let note = "Mirai Launcher is an independent fork of {upstream} by Storytold and is not affiliated with ArtCraft.";
+    let tip = "Based on {upstream} by Storytold";
+    for lang in Lang::all() {
+        for template in [note, tip] {
+            let out = fmt(tr(lang, template), &[("upstream", artcraft_launcher_core::brand::UPSTREAM_NAME)]);
+            assert!(out.contains(artcraft_launcher_core::brand::UPSTREAM_NAME), "{}: the credit lost the upstream name: {out}", lang.code());
+            assert!(!out.contains('{'), "{}: the placeholder wasn't filled: {out}", lang.code());
+        }
+    }
+}
+
+#[test]
 fn russian_plural_rule_works() {
     for n in [1, 21, 31, 101] {
         assert_eq!(plural_east_slavic(n), 0, "{n}");

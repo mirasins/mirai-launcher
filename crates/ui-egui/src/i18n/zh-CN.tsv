@@ -26,7 +26,6 @@
 	Installed version	已安装版本
 	Latest version	最新版本
 	Newest release	发布日期
-	Discord	Discord
 	GitHub	GitHub
 	Website	网站
 	Classic apps	经典应用
@@ -97,7 +96,7 @@
 	Show the window on the current desktop	在当前桌面显示窗口
 	Start ArtCraft Launcher when I log in	登录时启动 ArtCraft Launcher
 	Community	社区
-	Questions, ideas and news from the ArtCraft team	与 ArtCraft 团队交流问题、想法和动态
+	Questions, ideas and news from the Mirai community	与 Mirai 社区交流问题、想法和动态
 	Appearance	外观
 	Quit ArtCraft Launcher	退出 ArtCraft Launcher
 	Done	完成
@@ -130,8 +129,8 @@ month	Dec	12月
 	Installing for {platform}	安装平台：{platform}
 	Downloads for {platform}	下载平台：{platform}
 	No downloads for this system	此系统暂无可用下载
-	Join the ArtCraft community on Discord	加入 Discord 上的 ArtCraft 社区
-	ArtCraft on {name}	ArtCraft 的 {name} 主页
+	Report an issue	报告问题
+	Mirai Launcher is an independent fork of {upstream} by Storytold and is not affiliated with ArtCraft.	Mirai Launcher 是 {upstream}（Storytold 的项目）的独立分叉，与 ArtCraft 并无隶属关系。
 	Available to install	可安装
 	Available	可用
 	Installed · up to date	已安装 · 已是最新
@@ -240,7 +239,7 @@ filter	Installed	已安装
 	Update	更新
 	New	新
 	Classic	经典
-	Join the Discord	加入 Discord
+	Join the Mirai community	加入 Mirai 社区
 	Minimize	最小化
 	Maximize	最大化
 	Restore	还原
@@ -249,8 +248,8 @@ filter	Installed	已安装
 	Show ArtCraft Launcher	显示 ArtCraft Launcher
 	Check for Updates	检查更新
 	Visit getartcraft.com	访问 getartcraft.com
-	ArtCraft on GitHub	ArtCraft 的 GitHub 主页
-	Join the ArtCraft Discord	加入 ArtCraft Discord 社区
+	Upstream project	原始项目
+	Based on {upstream} by Storytold	基于 Storytold 的 {upstream}
 @plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · 有 {n} 个可用更新
 @plural	{n} app|{n} apps	{n} 个应用
 artcraft	AI image and video creation	AI 图像与视频创作
