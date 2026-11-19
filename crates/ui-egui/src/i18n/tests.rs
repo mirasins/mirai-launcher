@@ -228,6 +228,15 @@ fn the_upstream_credit_keeps_the_original_project_s_name() {
             assert!(!out.contains('{'), "{}: the placeholder wasn't filled: {out}", lang.code());
         }
     }
+    // The site button labels getartcraft.com as the original ArtCraft project's, in every
+    // language. "ArtCraft" on its own is never rebranded (only "ArtCraft Launcher" is), so the
+    // label names the original project as long as no catalog translates the name away.
+    let site = "getartcraft.com — the original ArtCraft project";
+    for lang in Lang::all() {
+        let out = tr(lang, site);
+        assert!(out.contains("ArtCraft"), "{}: the site label lost the original project's name: {out}", lang.code());
+        assert!(out.contains("getartcraft.com"), "{}: the site label lost the site's address: {out}", lang.code());
+    }
 }
 
 #[test]

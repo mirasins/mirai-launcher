@@ -360,7 +360,7 @@ filter	Installed	Instaladas
 @id	appearance.theme	Apariencia
 	Show ArtCraft Launcher	Mostrar ArtCraft Launcher
 	Check for Updates	Buscar actualizaciones
-	Visit getartcraft.com	Visitar getartcraft.com
+	getartcraft.com — the original ArtCraft project	getartcraft.com — el proyecto original de ArtCraft
 	Upstream project	El proyecto original
 	Based on {upstream} by Storytold	Basado en {upstream}, de Storytold
 @plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · {n} actualización disponible|ArtCraft Launcher · {n} actualizaciones disponibles

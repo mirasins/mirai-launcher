@@ -347,7 +347,7 @@ filter	Installed	Nainstalováno
 @id	appearance.theme	Vzhled
 	Show ArtCraft Launcher	Zobrazit ArtCraft Launcher
 	Check for Updates	Zkontrolovat aktualizace
-	Visit getartcraft.com	Navštívit getartcraft.com
+	getartcraft.com — the original ArtCraft project	getartcraft.com — původní projekt ArtCraft
 	Upstream project	Původní projekt
 	Based on {upstream} by Storytold	Založeno na projektu {upstream} od Storytoldu
 @plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · {n} dostupná aktualizace|ArtCraft Launcher · {n} dostupné aktualizace|ArtCraft Launcher · {n} dostupných aktualizací

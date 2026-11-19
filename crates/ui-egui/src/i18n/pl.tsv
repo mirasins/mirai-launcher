@@ -381,7 +381,7 @@ filter	Installed	Zainstalowane
 # Tray (menu bar) menu and tooltip
 	Show ArtCraft Launcher	Pokaż ArtCraft Launcher
 	Check for Updates	Sprawdź dostępność aktualizacji
-	Visit getartcraft.com	Odwiedź getartcraft.com
+	getartcraft.com — the original ArtCraft project	getartcraft.com — oryginalny projekt ArtCraft
 	Upstream project	Pierwotny projekt
 	Based on {upstream} by Storytold	Oparty na projekcie {upstream} od Storytold
 @plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · {n} dostępna aktualizacja|ArtCraft Launcher · {n} dostępne aktualizacje|ArtCraft Launcher · {n} dostępnych aktualizacji

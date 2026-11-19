@@ -380,7 +380,7 @@ filter	Installed	Telepítve
 # Tray (menu bar) menu and tooltip
 	Show ArtCraft Launcher	ArtCraft Launcher megjelenítése
 	Check for Updates	Frissítések keresése
-	Visit getartcraft.com	getartcraft.com megnyitása
+	getartcraft.com — the original ArtCraft project	getartcraft.com — az eredeti ArtCraft-projekt
 	Upstream project	Az eredeti projekt
 	Based on {upstream} by Storytold	A Storytold {upstream} projektje alapján
 @plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · {n} frissítés elérhető|ArtCraft Launcher · {n} frissítés elérhető
