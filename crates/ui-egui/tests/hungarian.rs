@@ -172,9 +172,9 @@ fn check_settings_layout() {
         // upstream-credit icon shares its label with the settings button, so only unique labels
         // anchor a scroll), and every link is checked wherever it lands on screen. The footer's
         // icons and the cards behind the modal sit below the fixed actions and never qualify.
-        let links = ["Csatlakozz a Mirai közösségéhez", "Hiba bejelentése", "Az eredeti projekt", "getartcraft.com megnyitása"];
+        let links = ["Csatlakozz a Mirai közösségéhez", "Hiba bejelentése", "Az eredeti projekt", "getartcraft.com — az eredeti ArtCraft-projekt"];
         let mut seen = vec![false; links.len()];
-        for anchor in ["Csatlakozz a Mirai közösségéhez", "getartcraft.com megnyitása"] {
+        for anchor in ["Csatlakozz a Mirai közösségéhez", "getartcraft.com — az eredeti ArtCraft-projekt"] {
             h.get_by_label(anchor).scroll_to_me();
             h.run_steps(8);
             let mut on_screen: Vec<egui::Rect> = Vec::new();

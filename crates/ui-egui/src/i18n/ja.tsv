@@ -382,7 +382,7 @@ filter	Installed	インストール済み
 # Tray (menu bar) menu and tooltip
 	Show ArtCraft Launcher	ArtCraft Launcher を表示
 	Check for Updates	更新を確認
-	Visit getartcraft.com	getartcraft.com を開く
+	getartcraft.com — the original ArtCraft project	getartcraft.com — オリジナルの ArtCraft プロジェクト
 	Upstream project	オリジナルのプロジェクト
 	Based on {upstream} by Storytold	Storytold の {upstream} を基に開発
 @plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · {n} 件の更新があります

@@ -5,16 +5,17 @@
   <id>ai.storyteller.artcraft-launcher</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT OR Apache-2.0</project_license>
-  <name>ArtCraft Launcher</name>
+  <name>Mirai Launcher</name>
   <summary>Install, update and launch the Craft App Suite</summary>
   <developer id="ai.storyteller">
     <name>Learning Machines LLC</name>
   </developer>
   <description>
     <p>
-      ArtCraft Launcher lists every app in the Craft App Suite (PhotoCraft, LightCraft, FilmCraft,
-      DesignCraft, VectorCraft, PdfCraft, EffectCraft, WordCraft, DeckCraft, GridCraft, CADCraft,
-      SoundCraft and FigCraft), installs the right build for your computer, and keeps them up to date.
+      Mirai Launcher lists every app in the Craft App Suite (PhotoCraft, LightCraft, FilmCraft,
+      DesignCraft, VectorCraft, EffectCraft, CADCraft, SoundCraft and FigCraft, and the Mirai
+      apps Mirai Reader, Mirai Words, Mirai Presentations and Mirai Calc), installs the right
+      build for your computer, and keeps them up to date.
     </p>
     <ul>
       <li>One place to find, install and open every Craft app</li>
@@ -37,7 +38,7 @@
     <keyword>launcher</keyword>
     <keyword>installer</keyword>
     <keyword>updater</keyword>
-    <keyword>artcraft</keyword>
+    <keyword>mirai</keyword>
   </keywords>
   <branding>
     <color type="primary" scheme_preference="light">#d9dce3</color>

@@ -383,7 +383,7 @@ filter	Installed	დაინსტალირებული
 # Tray (menu bar) menu and tooltip
 	Show ArtCraft Launcher	ArtCraft Launcher-ის ჩვენება
 	Check for Updates	განახლებების შემოწმება
-	Visit getartcraft.com	getartcraft.com-ის გახსნა
+	getartcraft.com — the original ArtCraft project	getartcraft.com — ორიგინალური ArtCraft პროექტი
 	Upstream project	საწყისი პროექტი
 	Based on {upstream} by Storytold	დაფუძნებულია Storytold-ის {upstream}-ზე
 @plural	ArtCraft Launcher · {n} update available|ArtCraft Launcher · {n} updates available	ArtCraft Launcher · ხელმისაწვდომია {n} განახლება|ArtCraft Launcher · ხელმისაწვდომია {n} განახლება

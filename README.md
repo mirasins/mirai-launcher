@@ -2,12 +2,14 @@
   <img src="assets/app-icon/hicolor/256x256/apps/ai.storyteller.artcraft-launcher.png" width="128" height="128" alt="Mirai Launcher icon: a pink-to-violet orb with the word Mirai">
 </p>
 
-<h1 align="center">ArtCraft Launcher</h1>
+<h1 align="center">Mirai Launcher</h1>
 
 <p align="center">
   <b>One place to install, update and open every app in the Craft App Suite, rebuilt in pure Rust.</b><br>
-  PhotoCraft, LightCraft, FilmCraft, DesignCraft, VectorCraft, PdfCraft, EffectCraft, AniCraft, WordCraft,<br>
-  DeckCraft, GridCraft, CADCraft, SoundCraft, FigCraft, Craft Anything, TextureCraft, MaterialCraft and the community apps SolidCraft and MailCraft: the right build for your computer, kept up to date.
+  PhotoCraft, LightCraft, FilmCraft, DesignCraft, VectorCraft, EffectCraft, AniCraft, CADCraft,<br>
+  SoundCraft, FigCraft, Craft Anything, TextureCraft, MaterialCraft, the Mirai apps (Mirai Reader,
+  Mirai Words, Mirai Presentations and Mirai Calc) and the community apps SolidCraft and MailCraft:
+  the right build for your computer, kept up to date.
 </p>
 
 <p align="center">
@@ -15,9 +17,6 @@
   <img alt="macOS · Windows · Linux · FreeBSD · Web" src="https://img.shields.io/badge/macOS%20%C2%B7%20Windows%20%C2%B7%20Linux%20%C2%B7%20FreeBSD%20%C2%B7%20Web-native-26282e?style=flat-square">
   <img alt="License: MIT OR Apache-2.0" src="https://img.shields.io/badge/license-MIT%20%2F%20Apache--2.0-3a3a3a?style=flat-square">
   <img alt="Status: early alpha" src="https://img.shields.io/badge/status-early%20alpha-d69e2e?style=flat-square">
-  <br>
-  <a href="https://sonarcloud.io/project/overview?id=storytold_craft-launcher"><img alt="Scanned by SonarCloud" src="https://img.shields.io/badge/Scanned_by-SonarCloud-4b9fd5?style=flat-square&logo=sonarqubecloud&logoColor=white"></a>
-  <a href="https://coderabbit.ai"><img alt="Reviewed by CodeRabbit" src="https://img.shields.io/coderabbit/prs/github/storytold/craft-launcher?style=flat-square&label=Reviewed%20by%20CodeRabbit&logo=coderabbit"></a>
 </p>
 
 <p align="center">
@@ -25,9 +24,9 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/storytold/craft-launcher/releases/latest"><b>Download ArtCraft Launcher</b></a> ·
-  <a href="https://getartcraft.com/">ArtCraft</a> ·
-  <a href="https://getartcraft.com/apps">The Craft App Suite</a>
+  <a href="https://github.com/mirasins/mirai-launcher/releases/latest"><b>Download Mirai Launcher</b></a> ·
+  <a href="https://getartcraft.com/">ArtCraft</a> and
+  <a href="https://getartcraft.com/apps">the Craft App Suite</a> — the original ArtCraft project, not Mirai
 </p>
 
 > [!NOTE]
@@ -47,7 +46,7 @@
 </p>
 
 <p align="center">
-  <img src="docs/screenshots/artcraft-launcher-grid.png" alt="ArtCraft Launcher on macOS in the grid view (dark theme): a card for each Craft App with its icon, status, version, release date and an Install or Open button" width="900">
+  <img src="docs/screenshots/artcraft-launcher-grid.png" alt="Mirai Launcher on macOS in the grid view (dark theme): a card for each app with its icon, status, version, release date and an Install or Open button" width="900">
 </p>
 <p align="center">
   <img src="docs/screenshots/artcraft-launcher-table.png" alt="The same apps in the table view (light theme), with columns for each app's status, installed and latest versions, and release date" width="900"><br>
@@ -56,7 +55,7 @@
 
 ## What it does
 
-The Craft apps each ship their own builds for every platform. ArtCraft Launcher saves you from
+The Craft apps each ship their own builds for every platform. Mirai Launcher saves you from
 hunting through a dozen release pages: it lists every app in the suite, shows which ones you have
 and which version, installs the right build for your operating system and processor, and tells
 you when an update is out. It is a small native app that can sit in your menu bar or system tray.
@@ -113,7 +112,7 @@ Traditional Chinese catalog and font details.
 
 ## Where apps are installed
 
-ArtCraft Launcher installs each app where your system normally keeps applications, using the
+Mirai Launcher installs each app where your system normally keeps applications, using the
 app's official release package, so an app installed by the launcher is the same as one you
 installed by hand (and the launcher finds apps you installed yourself):
 
@@ -125,7 +124,7 @@ installed by hand (and the launcher finds apps you installed yourself):
 | Linux, inside the launcher's Flatpak, with no Flatpak on the host | `~/.var/app/ai.storyteller.artcraft-launcher/data/artcraft-launcher/apps/<app>` | The release tarball, unpacked into the launcher's own folder and run inside the same sandbox, with its settings in a `home/` folder beside it. Nothing is installed on the host, and each app's configuration stays in the sandbox |
 | FreeBSD | `/usr/local` | The release tree, with a password prompt (polkit); `~/.local` when polkit isn't installed |
 
-ArtCraft Launcher keeps itself current too: when a new version is out, **Update and restart**
+Mirai Launcher keeps itself current too: when a new version is out, **Update and restart**
 downloads it, verifies it, puts it where this copy is installed (the `.app`, the Windows Installer
 package or portable folder, the AppImage, or the `.deb`/`.rpm`) and reopens it.
 
@@ -140,7 +139,7 @@ portable zip's executable) and keeps the previous two runs as `artcraft-launcher
 
 ## Downloads
 
-Download the build for your computer from the [latest release](https://github.com/storytold/craft-launcher/releases/latest), or browse [all releases](https://github.com/storytold/craft-launcher/releases). Every release has a `SHA256SUMS.txt` to check the files against. `<ver>` is the version number, for example `0.1.0`.
+Download the build for your computer from the [latest release](https://github.com/mirasins/mirai-launcher/releases/latest), or browse [all releases](https://github.com/mirasins/mirai-launcher/releases). Every release has a `SHA256SUMS.txt` to check the files against. `<ver>` is the version number, for example `0.1.0`.
 
 **Windows** (10 and 11)
 
@@ -195,8 +194,8 @@ You need a recent stable Rust (1.90 or newer). On Linux, install the windowing h
 (Debian/Ubuntu: `sudo apt install libxkbcommon-dev libwayland-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev`).
 
 ```sh
-git clone https://github.com/storytold/craft-launcher
-cd craft-launcher
+git clone https://github.com/mirasins/mirai-launcher
+cd mirai-launcher
 cargo run --release -p artcraft-launcher   # the desktop app
 cargo xtask ci                             # fmt, clippy, tests and the wasm check
 ```
@@ -213,7 +212,7 @@ cd apps/artcraft-launcher-web && trunk serve
 `flake.nix` gives a dev shell (`nix develop`, then the cargo commands above) and a package:
 
 ```sh
-nix run github:storytold/craft-launcher
+nix run github:mirasins/mirai-launcher
 ```
 
 On NixOS this uses the system's graphics drivers. On other distros, a Nix-built program can't load
@@ -222,7 +221,7 @@ the host's GPU drivers, so the window may fail to open. Run it through
 variant), or use the AppImage, `.deb` or `.rpm` release:
 
 ```sh
-nix run --impure github:nix-community/nixGL -- nix run github:storytold/craft-launcher
+nix run --impure github:nix-community/nixGL -- nix run github:mirasins/mirai-launcher
 ```
 
 ### Installing your own builds
@@ -248,15 +247,21 @@ New contributors and AI agents: start with [`AGENTS.md`](AGENTS.md). Release pac
 [`packaging/`](packaging/) and [`.github/workflows/release.yml`](.github/workflows/release.yml).
 
 > [!IMPORTANT]
-> **Status:** ArtCraft Launcher is new and in early alpha. Expect rough edges, and please file
+> **Status:** Mirai Launcher is new and in early alpha. Expect rough edges, and please file
 > issues (include your OS, which app you were installing and the launcher's log file) at
 > [github.com/mirasins/mirai-launcher/issues](https://github.com/mirasins/mirai-launcher/issues).
 
 ## The Craft App Suite
 
-ArtCraft Launcher installs the **Craft App Suite**: free, open-source creative tools from the
+Mirai Launcher installs the **Craft App Suite**: free, open-source creative tools from the
 [ArtCraft](https://getartcraft.com/) team, each written from scratch in Rust and each able to
-stand on its own.
+stand on its own. The suite is the original ArtCraft project's — it is not part of Mirai, and the
+links in the table below lead to the original project's repositories and site. In this fork,
+[Mirai Reader](https://github.com/mirasins/mirai-reader-pdfcraft-fork),
+[Mirai Words](https://github.com/mirasins/mirai-words-wordcraft-fork),
+[Mirai Presentations](https://github.com/mirasins/mirai-presentations-deckcraft-fork) and
+[Mirai Calc](https://github.com/mirasins/mirai-calc-gridcraft-fork) take the places of PdfCraft,
+WordCraft, DeckCraft and GridCraft.
 
 |                                                                                                                                                                                            | App                 | What it's for                                         | Code                                                  | Learn more                                                 |
 |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:--------------------|:------------------------------------------------------|:------------------------------------------------------|:-----------------------------------------------------------|
@@ -314,8 +319,9 @@ stand on its own.
 
 ## Thanks
 
-The community built launchers for the Craft App Suite before we did, and ArtCraft Launcher learned a
-lot from them. Thank you to their authors:
+The community built launchers for the Craft App Suite before the original ArtCraft project did,
+and the original ArtCraft Launcher learned a lot from them; Mirai Launcher builds on that work.
+Thank you to their authors:
 
 | Project | Author | What we learned from it |
 |---|---|---|
@@ -334,7 +340,7 @@ lot from them. Thank you to their authors:
 
 ## License and credits
 
-ArtCraft Launcher is dual-licensed under [MIT](LICENSE-MIT) or [Apache-2.0](LICENSE-APACHE), at your option.
+Mirai Launcher is dual-licensed under [MIT](LICENSE-MIT) or [Apache-2.0](LICENSE-APACHE), at your option.
 Copyright (c) 2026 ArtCraft Team and the ArtCraft Launcher contributors. Required notices are in [NOTICE](NOTICE).
 
 Bundled fonts, icons, images and other assets keep their own open licenses; each one is listed

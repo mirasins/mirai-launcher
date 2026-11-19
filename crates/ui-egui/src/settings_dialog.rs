@@ -370,7 +370,8 @@ impl LauncherUi {
                 }
             });
             // The credit stands apart from the fork's own links: what follows names the original
-            // project, its author and its site, and says the fork is independent.
+            // project, its author and its site, and says the fork is independent. The site button
+            // spells the original project out, so the link can't be read as one of Mirai's.
             ui.add_space(8.0);
             // The upstream project's name is a placeholder filled in after translation, so the
             // fork's runtime rebranding of "ArtCraft Launcher" cannot rename the project the
@@ -388,7 +389,10 @@ impl LauncherUi {
                 if widgets::button(ui, tl!("Upstream project"), Kind::Secondary, 0.0).on_hover_text(UPSTREAM_URL).clicked() {
                     widgets::open_external_link(ui.ctx(), UPSTREAM_URL);
                 }
-                if widgets::button(ui, tl!("Visit getartcraft.com"), Kind::Secondary, 0.0).on_hover_text(WEBSITE_URL).clicked() {
+                if widgets::button(ui, tl!("getartcraft.com — the original ArtCraft project"), Kind::Secondary, 0.0)
+                    .on_hover_text(WEBSITE_URL)
+                    .clicked()
+                {
                     widgets::open_external_link(ui.ctx(), WEBSITE_URL);
                 }
             });
