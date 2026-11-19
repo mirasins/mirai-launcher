@@ -72,9 +72,12 @@ fn to_update_platform(platform: Platform) -> craft_update::Platform {
 }
 
 /// Whether `release` is the version this launcher just updated itself to.
-pub fn just_updated_to(paths: &Paths, release: &Release) -> bool {
+///
+/// `repo` must be the feed repository the release was read from (same value passed to
+/// [`update`]), so the restart marker matches the download that was just installed.
+pub fn just_updated_to(paths: &Paths, release: &Release, repo: &str) -> bool {
     let update_paths = to_update_paths(paths);
-    let update_release = to_update_release(release, "");
+    let update_release = to_update_release(release, repo);
     craft_update::self_update::just_updated_to(&update_paths, &update_release)
 }
 

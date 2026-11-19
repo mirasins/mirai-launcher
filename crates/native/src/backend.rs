@@ -1251,7 +1251,7 @@ fn check_app(
 fn launcher_update(paths: &Paths, latest: Option<LatestRelease>, repo: &str, shared: &Arc<Shared>) {
     let Some(LatestRelease::Found(r)) = latest else { return };
     let (Some(newest), Some(current)) = (r.version.as_ref(), crate::self_update::current_version()) else { return };
-    if version::is_newer(newest, &current) && !crate::self_update::just_updated_to(paths, &r) {
+    if version::is_newer(newest, &current) && !crate::self_update::just_updated_to(paths, &r, repo) {
         shared.self_install.get_or_init(crate::self_update::current);
         shared.self_updating.get_or_init(crate::self_update::is_self_updating);
         *shared.launcher_release.lock().unwrap_or_else(PoisonError::into_inner) = Some((r.clone(), repo.to_string()));
