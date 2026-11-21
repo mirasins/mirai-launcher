@@ -1074,7 +1074,8 @@ impl LauncherUi {
             width -= theme::CONTROL_H + gap;
         }
         let squares = 1.0 + if show_pin { 1.0 } else { 0.0 };
-        let main_w = (width - squares * (theme::CONTROL_H + gap) + gap).max(120.0);
+        // N square controls need N gaps (egui spaces between items, not after the last).
+        let main_w = (width - squares * (theme::CONTROL_H + gap)).max(120.0);
         if entry.job.is_some() {
             self.job_actions(ui, entry, &id, main_w, width);
             return;
@@ -1249,7 +1250,8 @@ impl LauncherUi {
         // was already drawn and subtracted by `actions_in`; do not reserve or draw it again.
         let show_pin = !self.settings.hidden.contains(entry.app.id);
         let squares = 2.0 + if show_pin { 1.0 } else { 0.0 };
-        let resume_w = (width - squares * (theme::CONTROL_H + gap) + gap).max(90.0);
+        // Same spacing math as `actions_in`: N squares ⇒ N gaps, no trailing gap to add back.
+        let resume_w = (width - squares * (theme::CONTROL_H + gap)).max(90.0);
         // Narrow (the table): just tl!("Resume"); the tooltip says how far it got.
         let label = match resume_w {
             w if w < 150.0 => tl!("Resume").to_string(),
