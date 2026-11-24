@@ -16,6 +16,7 @@ struct App {
     ink_light: [u8; 3],
     ink_dark: [u8; 3],
     repo: String,
+    former_repo: Option<String>,
     former_ids: Vec<String>,
     former_names: Vec<String>,
     kind: String,
@@ -71,7 +72,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         };
         writeln!(
             apps,
-            "CraftApp {{ id: {:?}, name: {:?}, tagline: {:?}, color: {:?}, ink_light: {:?}, ink_dark: {:?}, repo: {:?}, former_ids: {}, former_names: {}, kind: AppKind::{kind}, publisher: {:?}, msi_publisher: {}, bundle: {}, former_bundles: {}, site: {}, mac_team: {}, mac_bundle_name: {}, channel: {} }},",
+            "CraftApp {{ id: {:?}, name: {:?}, tagline: {:?}, color: {:?}, ink_light: {:?}, ink_dark: {:?}, repo: {:?}, former_repo: {}, former_ids: {}, former_names: {}, kind: AppKind::{kind}, publisher: {:?}, msi_publisher: {}, bundle: {}, former_bundles: {}, site: {}, mac_team: {}, mac_bundle_name: {}, channel: {} }},",
             app.id,
             app.name,
             app.tagline,
@@ -79,6 +80,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             app.ink_light,
             app.ink_dark,
             app.repo,
+            optional(&app.former_repo),
             slice(&app.former_ids),
             slice(&app.former_names),
             app.publisher,
